@@ -33,28 +33,30 @@ public class ClientConnection implements Runnable{
 
             while (true){
 
-                String inputCommand = in.readLine();
+                String inputStream = in.readLine();
 
-                // TODO - SOUT for debugging purposes only, DELETE this after.
-                System.out.println(inputCommand);
+                //TODO - Check proper method name
+                myServer.sendToAll(inputStream);
 
-                //TODO - Implement proper broadcasting method from Server.
-                //myServer.sendAll(inputStream);
+                if(inputStream!=null){
+                    //TODO - Check proper method name
+                    myServer.removeFromServer(this);
+                }
             }
 
         } catch (IOException e) {
-            System.out.println("Error with Input/Output Steams"+e.getMessage());
+            System.out.println("Error"+e.getMessage());
         }
 
     }
 
-
-    public void send(String message){
-        out.write(message + "\n");
+    //Send command to Game
+    public void send(String command){
+        out.write(command + "\n");
         out.flush();
     }
 
-    //SETTER - For custom client name (if needed)
+    //SETTER - Set custom name for player (If needed)
     public void setName(String newName){
         myName = newName;
     }
