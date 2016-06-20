@@ -1,7 +1,7 @@
 /**
  * Created by codecadet on 20/06/16.
  */
-public class Player {
+public class Player implements Runnable{
 
     private Position pos;
 
@@ -11,6 +11,10 @@ public class Player {
 
     public Position getPos() {
         return pos;
+    }
+
+    public void run() {
+        //switch
     }
 }
 

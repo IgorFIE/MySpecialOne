@@ -8,6 +8,22 @@ public class Server {
 
     private final int portNumber = 8080;
     private ServerSocket serverSocket = null;
-    private List<Client> clientList = Collections.synchronizedList(new LinkedList<>());
+    private List<ClientConnection> clientList = Collections.synchronizedList(new LinkedList<>());
+    //pool
 
+    public Server(){
+
+    }
+
+    public void init(){
+
+    }
+
+    public synchronized void seendToAll(){
+
+    }
+
+    public void removeFromServer(){
+
+    }
 }
