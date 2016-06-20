@@ -66,6 +66,10 @@ public class ClientConnection implements Runnable{
         myName = newName;
     }
 
+    //GETTER - Get client name
+    public String getMyName() {
+        return myName;
+    }
 }
 
 

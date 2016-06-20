@@ -51,7 +51,7 @@ public class Server {
      */
     public void init(){
 
-        while(clientList.size() < 2){
+        while(true){
 
             try {
 
@@ -63,15 +63,16 @@ public class Server {
                 clientList.add(client);
                 pool.submit(new Thread(client));
 
+                if(clientList.size() == 2){
+                    //TODO what we will send???
+                    sendToAll(clientList.get(0).getMyName() + ":" + clientList.get(1).getMyName());
+                    sendToAll("start");
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-
-        //TODO what we will send???
-        sendToAll("start");
-
     }
 
     /**
