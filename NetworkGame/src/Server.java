@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collections;
@@ -46,7 +43,12 @@ public class Server {
 
     }
 
-
+    /**
+     * wait for two client connections then start a new game
+     *
+     * When a player connects add him to the client list and submit it
+     * to the thread pool
+     */
     public void init(){
 
         while(clientList.size() < 2){
@@ -67,17 +69,27 @@ public class Server {
 
         }
 
-        Game game = new Game(clientList);
+        //TODO what we will send???
+        Game game = new Game();
         game.start();
-
     }
 
+    /**
+     * send a respective String to all clients in the client List
+     *
+     * @param out String to send
+     */
     public synchronized void sendToAll(String out){
         for (ClientConnection c: clientList) {
             c.send(out);
         }
     }
 
+    /**
+     * Remove a client from the Client List
+     *
+     * @param client client to remove from the client list
+     */
     public void removeFromServer(ClientConnection client){
         clientList.remove(client);
     }
