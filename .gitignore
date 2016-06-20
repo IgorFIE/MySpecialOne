@@ -75,6 +75,9 @@ $RECYCLE.BIN/
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
 MySpecialOne/.idea/
+NetworkGame/*.iml
+
+*.iml
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids

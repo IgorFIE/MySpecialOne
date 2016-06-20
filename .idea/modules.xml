@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MySpecialOne.iml" filepath="$PROJECT_DIR$/MySpecialOne.iml" />
+      <module fileurl="file://$PROJECT_DIR$/NetworkGame/NetworkGame.iml" filepath="$PROJECT_DIR$/NetworkGame/NetworkGame.iml" />
+    </modules>
+  </component>
+</project>
