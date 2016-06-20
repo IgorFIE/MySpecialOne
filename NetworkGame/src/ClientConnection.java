@@ -33,10 +33,10 @@ public class ClientConnection implements Runnable{
 
             while (true){
 
-                String inputStream = in.readLine();
+                String inputCommand = in.readLine();
 
                 // TODO - SOUT for debugging purposes only, DELETE this after.
-                System.out.println(inputStream);
+                System.out.println(inputCommand);
 
                 //TODO - Implement proper broadcasting method from Server.
                 //myServer.sendAll(inputStream);
