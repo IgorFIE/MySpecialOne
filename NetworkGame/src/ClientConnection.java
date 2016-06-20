@@ -31,12 +31,15 @@ public class ClientConnection implements Runnable{
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new PrintWriter(clientSocket.getOutputStream(), true);
 
+            send("Enter your name.");
+            setName(in.readLine());
+
             while (true){
 
                 String inputStream = in.readLine();
 
                 //TODO - Check proper method name
-                myServer.sendToAll(inputStream);
+                myServer.sendToAll(myName + ":" + inputStream);
 
                 if(inputStream!=null){
                     //TODO - Check proper method name

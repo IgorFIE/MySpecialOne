@@ -70,8 +70,8 @@ public class Server {
         }
 
         //TODO what we will send???
-        Game game = new Game();
-        game.start();
+        sendToAll("start");
+
     }
 
     /**
