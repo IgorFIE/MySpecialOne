@@ -41,6 +41,8 @@ public class ClientConnection implements Runnable{
                 if(inputStream!=null){
                     //TODO - Check proper method name
                     myServer.removeFromServer(this);
+                    Thread.currentThread().interrupt();
+                    this.clientSocket.close();
                 }
             }
 
