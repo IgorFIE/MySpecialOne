@@ -1,4 +1,5 @@
 import com.googlecode.lanterna.TerminalFacade;
+import com.googlecode.lanterna.screen.ScreenCharacterStyle;
 import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
 
@@ -47,25 +48,15 @@ public class Field {
 
     }
 
-    /**
-     * Displays a group of cars in the screen
-     * @param cars an array of cars
-     */
-
-    /*
-    public static void draw(Player[] cars) {
+    public static void draw(Player player) {
 
         screen.clear();
 
-
-
-        for (Player c : cars) {
-            screen.putString (c.getPos().getCol(), c.getPos().getRow(), c.toString(), Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
-        }
+        screen.putString (player.getPos().getCol(), player.getPos().getRow(), "x", Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
 
 
         screen.refresh();
 
     }
-    */
+
 }
