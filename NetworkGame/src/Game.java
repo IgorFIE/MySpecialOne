@@ -2,20 +2,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  * Created by codecadet on 20/06/16.
  */
 public class Game {
 
-    Field field;
     private Position[] positions;
 
     private static int portNumber = 8080;
-    private static String hostName;
+    private static String hostName = "127.0.0.1";
     private static Socket socket;
     private static BufferedReader in;
-    Thread playerThread;
+    private Thread playerThread;
+    private HashMap<String, Player> players;
+
 
     // create a game object class from wich player extends
     // hashmap with key as player name and game object as value
@@ -25,9 +27,18 @@ public class Game {
 
         try {
             Game game = new Game();
+            String str;
 
-            String[] names = in.readLine().split(":");
-            if(in.readLine().equals("start")) {
+            System.out.println(in.readLine());
+            str = in.readLine();
+            System.out.println(str);
+            String[] names = str.split(":");
+            System.out.println(names.length);
+
+            str = in.readLine();
+            System.out.println(str);
+            if (str.equals("start")) {
+                System.out.println("started game");
                 game.start(2);
 
             }
@@ -36,34 +47,56 @@ public class Game {
         }
     }
 
-
     public Game() throws IOException {
 
         socket = new Socket(hostName, portNumber);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        playerThread = new Thread(new Player(socket));
+        playerThread = new Thread(new LocalPlayer(socket));
+        players = new HashMap<>();
         Field.init(100, 25);
-
     }
-
 
     public void start(int numPlayers) {
         createPlayers(numPlayers);
+
+        String[] input;
+        String player;
+        String action;
 
         try {
             while (true) {
 
                 String line = in.readLine();
-                if (line.equals("terminate")) {
-                    break;
-                }
-                if (line != null) {   // use switch to check action and use name to get player and update property
-                    String[] input = line.split((":"));
-                    String player = input[0];
-                    int col = Integer.parseInt(input[1]);
-                    int row = Integer.parseInt(input[2]);
 
+                if (line != null) {
+                    System.out.println(line);
+
+                    if (line.equals("terminate")) {
+                        break;
+                    }
+                    // use switch to check action and use name to get player and update property
+                    input = line.split((":"));
+                    player = input[0];
+                    action = input[1];
+
+                    switch (action) {
+
+                        case "up":
+                        case "down":
+                        case "left":
+                        case "right":
+                            players.get(player).move(input[1]);
+                            break;
+                        case "attack":
+                            //detect nearby enemies, deal damage
+                            break;
+                        case "die":
+                            //remove player, kill thread(?)
+                            break;
+                    }
                 }
+
+                Field.draw(players);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,8 +107,8 @@ public class Game {
 
     private void createPlayers(int numPlayers) {
         positions = new Position[numPlayers];
-        positions[0] = new Position(0, field.height / 2);
-        positions[1] = new Position(field.width / 2, 0);
+        positions[0] = new Position(0, Field.height / 2);
+        positions[1] = new Position(Field.width / 2, 0);
     }
 
     private void close() {

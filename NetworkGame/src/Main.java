@@ -5,12 +5,7 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) {
-        Game game = null;
-        try {
-            game = new Game();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        game.start(2);
+        Server server = new Server();
+
     }
 }

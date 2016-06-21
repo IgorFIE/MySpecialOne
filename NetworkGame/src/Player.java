@@ -1,64 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
-
 /**
- * Created by codecadet on 20/06/16.
+ * Created by codecadet on 21/06/16.
  */
-public class Player extends GenericPlayer implements Runnable{
+public class Player {
 
-    private Socket clientSocket;
-    private PrintWriter out;
+    private Position pos;
+    private int speed = 2;
+    private int health;
+    private boolean dead;
 
-    Player(Socket clientSocket){
-        super(new Position(20,20));
-        this.clientSocket = clientSocket;
-        Thread t = new Thread(this);
-        t.start();
+    public Player(Position pos) {
+        this.pos = pos;
     }
 
-    public void run() {
+    public Position getPos() {
+        return pos;
+    }
 
-        System.out.println("running");
-        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-        try {
+    public void loseHealth(int health) {
+        this.health -= health;
+        dead = health > 0;
+    }
 
-            out = new PrintWriter(clientSocket.getOutputStream());
+    public void move(String direction) {
 
-            String next;
-            while (!isDead() && (next = input.readLine()) != null) {
+        switch (direction) {
 
-                switch (next) {
+            case "up":
+                getPos().setRow(getPos().getRow() - getSpeed());
+                break;
 
-                    case "up":
-                        out.println(getPos().getCol() + ":" + (getPos().getRow()-getSpeed()));
-                        break;
+            case "down":
+                getPos().setRow(getPos().getRow()+getSpeed());
+                break;
 
-                    case "down":
-                        out.println(getPos().getCol() + ":" + (getPos().getRow()+getSpeed()));
-                        break;
+            case "left":
+                getPos().setCol(getPos().getCol() - getSpeed());
+                break;
 
-                    case "left":
-                        out.println((getPos().getCol()-getSpeed()) + ":" + getPos().getRow());
-                        break;
+            case "right":
+                getPos().setCol(getPos().getCol() + getSpeed());
+                break;
 
-                    case "right":
-                        out.println((getPos().getCol()+getSpeed()) + ":" + getPos().getRow());
-                        break;
-                }
-            }
+            case "attack":
+                break;
 
-            if (isDead()) {
-                out.println("dead");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            out.close();
         }
     }
-}
 
+    public boolean isDead() {
+        return dead;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+}

@@ -3,6 +3,8 @@ import com.googlecode.lanterna.screen.ScreenCharacterStyle;
 import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
 
+import java.util.HashMap;
+
 
 /**
  * Created by codecadet on 20/06/16.
@@ -48,15 +50,13 @@ public class Field {
 
     }
 
-    public static void draw(Player player) {
+    public static void draw(HashMap<String, Player> players) {
 
         screen.clear();
-
-        screen.putString (player.getPos().getCol(), player.getPos().getRow(), "x", Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
-
-
+        for (String s : players.keySet()) {
+            screen.putString(players.get(s).getPos().getCol(), players.get(s).getPos().getRow(), "x", Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
+        }
         screen.refresh();
 
     }
-
 }
