@@ -7,23 +7,16 @@ import java.net.Socket;
 /**
  * Created by codecadet on 20/06/16.
  */
-public class Player implements Runnable{
+public class Player extends GenericPlayer implements Runnable{
 
-    private Position pos;
     private Socket clientSocket;
     private PrintWriter out;
-    private int speed = 2;
-    private int health;
 
-    public  Player(){
-        pos = new Position(20,20);
-        //this.clientSocket = clientSocket;
+    Player(Socket clientSocket){
+        super(new Position(20,20));
+        this.clientSocket = clientSocket;
         Thread t = new Thread(this);
         t.start();
-    }
-
-    public Position getPos() {
-        return pos;
     }
 
     public void run() {
@@ -32,33 +25,39 @@ public class Player implements Runnable{
         BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
         try {
 
-            //out = new PrintWriter(clientSocket.getOutputStream());
+            out = new PrintWriter(clientSocket.getOutputStream());
 
             String next;
-            while ((next = input.readLine()) != null) {
+            while (!isDead() && (next = input.readLine()) != null) {
 
                 switch (next) {
 
                     case "up":
-                        out.println(getPos().getCol() + ":" + (getPos().getRow()-speed));
+                        out.println(getPos().getCol() + ":" + (getPos().getRow()-getSpeed()));
                         break;
 
                     case "down":
-                        out.println(getPos().getCol() + ":" + (getPos().getRow()+speed));
+                        out.println(getPos().getCol() + ":" + (getPos().getRow()+getSpeed()));
                         break;
 
                     case "left":
-                        out.println((getPos().getCol()-speed) + ":" + getPos().getRow());
+                        out.println((getPos().getCol()-getSpeed()) + ":" + getPos().getRow());
                         break;
 
                     case "right":
-                        out.println((getPos().getCol()+speed) + ":" + getPos().getRow());
+                        out.println((getPos().getCol()+getSpeed()) + ":" + getPos().getRow());
                         break;
                 }
             }
 
+            if (isDead()) {
+                out.println("dead");
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            out.close();
         }
     }
 }
