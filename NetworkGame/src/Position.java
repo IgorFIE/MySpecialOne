@@ -5,10 +5,30 @@ public class Position {
 
     private int col;
     private int row;
+    private int width;
+    private int height;
 
     public Position(int col, int row){
         this.col = col;
         this.row = row;
+        width = 3;
+        height = 3;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getOutCol(){
+        return col - 1;
+    }
+
+    public int getOutRow() {
+        return row - 1;
     }
 
     public void setRow(int row) {

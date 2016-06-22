@@ -9,8 +9,6 @@ import java.util.HashMap;
  */
 public class Game {
 
-    private Position[] positions;
-
     private static int portNumber = 8080;
     private static String hostName = "127.0.0.1";
     private static Socket socket;
@@ -71,7 +69,7 @@ public class Game {
 
                 Field.draw(players);
 
-                System.out.println(line);
+                System.out.println(line);          // TODO put get input from stream in a separate method
 
                     if (line.equals("terminate")) {
                         break;
@@ -85,7 +83,7 @@ public class Game {
                         action = input[1];
                     }
 
-                switch (action) {
+                switch (action) {               //TODO put this in a separate method
 
                     case "up":
                     case "down":
@@ -101,6 +99,7 @@ public class Game {
                         //remove player, kill thread(?)
                         break;
                 }
+                checkCollision();
             }
 
         } catch (IOException e) {
@@ -110,9 +109,32 @@ public class Game {
         }
     }
 
+    private void checkCollision() {
+        for (String name : players.keySet()) {
+            Player p1 = players.get(name);
+            
+            for (String name2: players.keySet()) {
+                Player p2 = players.get(name2);
+
+                if(p2 == p1){ continue;}
+
+                if(checkCrash(p1.getPos(), p2.getPos())) {
+                    System.out.println("crashed");
+/*                    p1.setCrashed();
+                    p2.setCrashed();*/
+                }
+            }
+        }
+    }
+
+    private boolean checkCrash(Position pos1, Position pos2) {
+        return Math.abs(pos1.getOutCol() - pos2.getOutCol()) <= pos1.getWidth() / 2 + pos2.getWidth() / 2 &&
+                Math.abs(pos1.getOutRow() - pos2.getOutRow()) <= pos1.getHeight() / 2 + pos2.getHeight() / 2;
+    }
+
     private void createPlayers(String[] names) { // which is local player's name
         players.put(names[0], localPlayer);
-        players.put(names[1], new Player(new Position(Field.width - 1, Field.height / 2)));
+        players.put(names[1], new Player(new Position(25, 25)));
     }
 
     private void close() {
