@@ -35,7 +35,9 @@ public class LocalPlayer extends Player implements Runnable{
             String next;
             while (!isDead() && (next = input.readLine()) != null) {
 
-                out.write(next);
+                System.out.println(next);
+                out.write(next+'\n');
+                out.flush();
             }
 
             if (isDead()) {

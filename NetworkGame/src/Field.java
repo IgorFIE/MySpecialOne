@@ -37,6 +37,7 @@ public class Field {
         // Set field size
         Field.width = width;
         Field.height = height;
+        screen.setCursorPosition(null);
         screen.getTerminal().setCursorVisible(false); // Not Working
         screen.getTerminal().getTerminalSize().setColumns(width);
         screen.getTerminal().getTerminalSize().setRows(height);
@@ -45,7 +46,6 @@ public class Field {
         screenWriter = new ScreenWriter(screen);
         screenWriter.setBackgroundColor(Terminal.Color.BLUE);
         screenWriter.setForegroundColor(Terminal.Color.WHITE);
-
         screen.startScreen();
 
     }

@@ -68,6 +68,7 @@ public class Game {
         try {
             while (true) {
 
+                Field.draw(players);
                 String line = in.readLine();
 
                 if (line != null) {
@@ -98,7 +99,6 @@ public class Game {
                     }
                 }
 
-                Field.draw(players);
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -26,7 +26,9 @@ public class Player {
         switch (direction) {
 
             case "up":
+                System.out.println(getPos().getRow());
                 getPos().setRow(getPos().getRow() - getSpeed());
+                System.out.println(getPos().getRow());
                 break;
 
             case "down":

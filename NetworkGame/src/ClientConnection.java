@@ -38,13 +38,14 @@ public class ClientConnection implements Runnable{
             System.out.println(myName);
             myServer.areYouReady();
 
-            while (!go) {
-                System.out.println("waiting");
-                wait();
-            }
+            waitForGo();
 
+            System.out.println("saºi do wait");
             while (go) {
+
+                System.out.println("I'm here");
                 String inputStream = in.readLine();
+                System.out.println(inputStream);
 
                 // TODO: 21/06/16 what happens when the player dies? does he get to watch??
                 if (inputStream == null) {
@@ -61,8 +62,6 @@ public class ClientConnection implements Runnable{
             }
         } catch (IOException e) {
             System.out.println("Error"+e.getMessage());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -83,12 +82,22 @@ public class ClientConnection implements Runnable{
         return myName;
     }
 
-    public void setGo() {
+    public synchronized void setGo() {
         this.go = true;
-
         System.out.println("go");
+        notifyAll();
     }
 
+    private synchronized void waitForGo() {
+        while (!go) {
+            System.out.println("waiting");
+            try {
+                wait(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
 
