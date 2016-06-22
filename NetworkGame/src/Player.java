@@ -6,14 +6,22 @@ public class Player {
     private Position pos;
     private int speed = 2;
     private int health;
+    private int strength;
     private boolean dead;
+    private boolean hasAttacked;
 
     public Player(Position pos) {
         this.pos = pos;
     }
 
-    public Position getPos() {
-        return pos;
+    public int attack() {
+
+        if (!hasAttacked) {
+            hasAttacked = true;
+            return strength;
+        }
+
+        return 0;
     }
 
     public void loseHealth(int health) {
@@ -22,6 +30,8 @@ public class Player {
     }
 
     public void move(String direction) {
+
+        hasAttacked = false;
 
         switch (direction) {
 
@@ -57,13 +67,8 @@ public class Player {
                 }
                 break;
 
-            case "attack":
-
-                break;
-
         }
     }
-
 
     public boolean isDead() {
         return dead;
@@ -71,5 +76,18 @@ public class Player {
 
     public int getSpeed() {
         return speed;
+    }
+
+    public Position getPos() {
+        return pos;
+    }
+
+    public boolean hasAttacked () {
+
+        return hasAttacked;
+    }
+
+    public int getHealth() {
+        return health;
     }
 }

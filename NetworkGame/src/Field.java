@@ -26,7 +26,8 @@ public class Field {
 
     /**
      * Initializes the Screen
-     * @param width screen width
+     *
+     * @param width  screen width
      * @param height screen height
      */
     public static void init(int width, int height) {
@@ -54,7 +55,24 @@ public class Field {
 
         screen.clear();
         for (String s : players.keySet()) {
-            screen.putString(players.get(s).getPos().getCol(), players.get(s).getPos().getRow(), "x", Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
+            int x = players.get(s).getPos().getCol();
+            int y = players.get(s).getPos().getRow();
+            System.out.println("entrando no for");
+
+            if (players.get(s).hasAttacked()) {
+                System.out.println( " this player has attacked");
+                for (int i =  x-1; i <= x + 1; i++) {
+
+                    System.out.println("i: " + i);
+                    for (int j = y-1; j <= y + 1; j++) {
+
+                        System.out.println("j: " + j);
+                        System.out.println("printing attack to lanterna");
+                        screen.putString(i, j, " ", Terminal.Color.GREEN, Terminal.Color.RED, ScreenCharacterStyle.Bold);
+                    }
+                }
+            }
+            screen.putString(x, y, Integer.toString(players.get(s).getHealth()), Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
         }
         screen.refresh();
 

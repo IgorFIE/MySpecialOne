@@ -19,7 +19,6 @@ public class Game {
     private HashMap<String, Player> players;
     private LocalPlayer localPlayer;
 
-
     // create a game object class from wich player extends
     // hashmap with key as player name and game object as value
     // input tells what kind of action is to be performed to wich player
@@ -35,6 +34,7 @@ public class Game {
             System.out.println(str);
             String[] names = str.split(":");
             System.out.println(names.length);
+            System.out.println(names);
 
             str = in.readLine();
             System.out.println(str);
@@ -66,13 +66,12 @@ public class Game {
         String action;
 
         try {
-            while (true) {
+            String line;
+            while ((line = in.readLine()) != null) {
 
                 Field.draw(players);
-                String line = in.readLine();
 
-                if (line != null) {
-                    System.out.println(line);
+                System.out.println(line);
 
                     if (line.equals("terminate")) {
                         break;
@@ -86,24 +85,24 @@ public class Game {
                         action = input[1];
                     }
 
-                    switch (action) {
+                switch (action) {
 
-                        case "up":
-                        case "down":
-                        case "left":
-                        case "right":
-                            players.get(player).move(input[1]);
-                            break;
-                        case "attack":
-                            //detect nearby enemies, deal damage
-                            break;
-                        case "die":
-                            //remove player, kill thread(?)
-                            break;
-                    }
+                    case "up":
+                    case "down":
+                    case "left":
+                    case "right":
+                        players.get(player).move(input[1]);
+                        break;
+                    case "attack":
+                        System.out.println("attacking");
+                        players.get(player).attack();
+                        break;
+                    case "die":
+                        //remove player, kill thread(?)
+                        break;
                 }
-
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
