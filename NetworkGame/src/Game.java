@@ -17,6 +17,7 @@ public class Game {
     private static BufferedReader in;
     private Thread playerThread;
     private HashMap<String, Player> players;
+    private LocalPlayer localPlayer;
 
 
     // create a game object class from wich player extends
@@ -39,7 +40,7 @@ public class Game {
             System.out.println(str);
             if (str.equals("start")) {
                 System.out.println("started game");
-                game.start(2);
+                game.start(names);
 
             }
         } catch (IOException e) {
@@ -51,13 +52,14 @@ public class Game {
 
         socket = new Socket(hostName, portNumber);
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        playerThread = new Thread(new LocalPlayer(socket));
+        localPlayer = new LocalPlayer(socket);
+        playerThread = new Thread(localPlayer);
         players = new HashMap<>();
         Field.init(100, 25);
     }
 
-    public void start(int numPlayers) {
-        createPlayers(numPlayers);
+    public void start(String[] names) {
+        createPlayers(names);
 
         String[] input;
         String player;
@@ -105,10 +107,9 @@ public class Game {
         }
     }
 
-    private void createPlayers(int numPlayers) {
-        positions = new Position[numPlayers];
-        positions[0] = new Position(0, Field.height / 2);
-        positions[1] = new Position(Field.width / 2, 0);
+    private void createPlayers(String[] names) { // which is local player's name
+        players.put(names[0], localPlayer);
+        players.put(names[1], new Player(new Position(Field.width - 1, Field.height / 2)));
     }
 
     private void close() {
