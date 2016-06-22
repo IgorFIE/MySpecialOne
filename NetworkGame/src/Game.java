@@ -80,7 +80,11 @@ public class Game {
                     // use switch to check action and use name to get player and update property
                     input = line.split((":"));
                     player = input[0];
-                    action = input[1];
+                    if(input.length<=1){
+                        action = "slip";
+                    } else {
+                        action = input[1];
+                    }
 
                     switch (action) {
 

@@ -26,28 +26,44 @@ public class Player {
         switch (direction) {
 
             case "up":
-                System.out.println(getPos().getRow());
-                getPos().setRow(getPos().getRow() - getSpeed());
-                System.out.println(getPos().getRow());
+                if(getPos().getRow() - getSpeed()<=0){
+                    getPos().setRow(0);
+                } else {
+                    getPos().setRow(getPos().getRow() - getSpeed());
+                }
                 break;
 
             case "down":
-                getPos().setRow(getPos().getRow()+getSpeed());
+                if(getPos().getRow() + getSpeed()>=Field.height-1){
+                    getPos().setRow(Field.height-1);
+                } else {
+                    getPos().setRow(getPos().getRow() + getSpeed());
+                }
                 break;
 
             case "left":
-                getPos().setCol(getPos().getCol() - getSpeed());
+                if(getPos().getCol() - getSpeed()<=0){
+                    getPos().setCol(0);
+                } else {
+                    getPos().setCol(getPos().getCol() - getSpeed());
+                }
                 break;
 
             case "right":
-                getPos().setCol(getPos().getCol() + getSpeed());
+                if(getPos().getCol() + getSpeed()>=Field.width-1){
+                    getPos().setCol(Field.width-1);
+                } else {
+                    getPos().setCol(getPos().getCol() + getSpeed());
+                }
                 break;
 
             case "attack":
+
                 break;
 
         }
     }
+
 
     public boolean isDead() {
         return dead;
