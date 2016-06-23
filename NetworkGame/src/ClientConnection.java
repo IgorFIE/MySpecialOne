@@ -40,15 +40,13 @@ public class ClientConnection implements Runnable{
 
             waitForGo();
 
-            System.out.println("saºi do wait");
             while (go) {
 
-                System.out.println("I'm here");
                 String inputStream = in.readLine();
                 System.out.println(inputStream);
 
                 // TODO: 21/06/16 what happens when the player dies? does he get to watch??
-                if (inputStream == null) {
+                if (inputStream.equals("dead") || inputStream == null) {
                     //TODO - Check proper method name
                     myServer.removeFromServer(this);
                     Thread.currentThread().interrupt();

@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Game {
 
     private static int portNumber = 8080;
-    private static String hostName = "127.0.0.1";
+    private static String hostName = "192.168.1.27";
     private static Socket socket;
     private static BufferedReader in;
     private Thread playerThread;

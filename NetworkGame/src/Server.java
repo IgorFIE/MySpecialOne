@@ -107,6 +107,7 @@ public class Server {
         for (ClientConnection c : clientList) {
             c.setGo();
         }
+        notifyAll();
     }
 
     /**
@@ -120,6 +121,7 @@ public class Server {
                 e.printStackTrace();
             }
         }
+        notifyAll();
     }
 
     /**
