@@ -51,7 +51,7 @@ public class Server {
      * then send to all the clients all their names and start
      * then it will wait until the room isn´t full
      */
-    public synchronized void init() {
+    public void init() {
         try {
             while (true) {
 
