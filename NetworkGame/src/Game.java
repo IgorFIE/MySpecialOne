@@ -57,8 +57,9 @@ public class Game {
     }
 
     public void start(String[] names) {
-        createPlayers(names);
 
+        createPlayers(names);
+        Field.draw(players);
         String[] input;
         String player;
         String action;
@@ -67,7 +68,7 @@ public class Game {
             String line;
             while ((line = in.readLine()) != null) {
 
-                Field.draw(players);
+
 
                 System.out.println(line);          // TODO put get input from stream in a separate method
 
@@ -98,7 +99,9 @@ public class Game {
                     case "die":
                         //remove player, kill thread(?)
                         break;
+
                 }
+                Field.draw(players);
             }
 
         } catch (IOException e) {

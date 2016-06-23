@@ -29,7 +29,10 @@ public class Player {
     public void loseHealth(int health) {
         System.out.println("lost health");
         this.health -= health;
-        dead = health > 0;
+        System.out.println(health);
+        if (health <= 0) {
+            dead = true;
+        }
     }
 
     public void move(String direction) {
