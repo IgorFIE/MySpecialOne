@@ -93,13 +93,12 @@ public class Game {
                         break;
                     case "attack":
                         System.out.println("attacking");
-                        players.get(player).attack();
+                        checkCollision(players.get(player).attack());
                         break;
                     case "die":
                         //remove player, kill thread(?)
                         break;
                 }
-                checkCollision();
             }
 
         } catch (IOException e) {
@@ -109,19 +108,24 @@ public class Game {
         }
     }
 
-    private void checkCollision() {
+    private void checkCollision(int damage) {
+
         for (String name : players.keySet()) {
             Player p1 = players.get(name);
             
             for (String name2: players.keySet()) {
                 Player p2 = players.get(name2);
 
+                // TODO: 23/06/16
                 if(p2 == p1){ continue;}
 
                 if(checkCrash(p1.getPos(), p2.getPos())) {
                     System.out.println("crashed");
-/*                    p1.setCrashed();
-                    p2.setCrashed();*/
+                    if (p1.hasAttacked()) {
+                        p2.loseHealth(damage);
+                    } else if (p2.hasAttacked()) {
+                        p1.loseHealth(damage);
+                    }
                 }
             }
         }

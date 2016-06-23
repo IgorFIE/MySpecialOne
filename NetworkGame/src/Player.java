@@ -25,6 +25,7 @@ public class Player {
     }
 
     public void loseHealth(int health) {
+        System.out.println("lost health");
         this.health -= health;
         dead = health > 0;
     }
