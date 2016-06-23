@@ -22,15 +22,15 @@ public class Player {
             hasAttacked = true;
             return strength;
         }
-
         return 0;
     }
 
-    public void loseHealth(int health) {
+    public void loseHealth(int dmg) {
         System.out.println("lost health");
-        this.health -= health;
-        System.out.println(health);
+        health -= dmg;
+        System.out.println("current health" + health);
         if (health <= 0) {
+            health = 0;
             dead = true;
         }
     }
@@ -42,7 +42,7 @@ public class Player {
         switch (direction) {
 
             case "up":
-                if(getPos().getRow() - getSpeed()<=0){
+                if (getPos().getRow() - getSpeed() < 0) {
                     getPos().setRow(0);
                 } else {
                     getPos().setRow(getPos().getRow() - getSpeed());
@@ -50,15 +50,15 @@ public class Player {
                 break;
 
             case "down":
-                if(getPos().getRow() + getSpeed()>=Field.height-1){
-                    getPos().setRow(Field.height-1);
+                if (getPos().getRow() + getSpeed() > Field.height - 1) {
+                    getPos().setRow(Field.height - 1);
                 } else {
                     getPos().setRow(getPos().getRow() + getSpeed());
                 }
                 break;
 
             case "left":
-                if(getPos().getCol() - getSpeed()<=0){
+                if (getPos().getCol() - getSpeed() < 0) {
                     getPos().setCol(0);
                 } else {
                     getPos().setCol(getPos().getCol() - getSpeed());
@@ -66,8 +66,8 @@ public class Player {
                 break;
 
             case "right":
-                if(getPos().getCol() + getSpeed()>=Field.width-1){
-                    getPos().setCol(Field.width-1);
+                if (getPos().getCol() + getSpeed() > Field.width - 1) {
+                    getPos().setCol(Field.width - 1);
                 } else {
                     getPos().setCol(getPos().getCol() + getSpeed());
                 }
@@ -88,7 +88,7 @@ public class Player {
         return pos;
     }
 
-    public boolean hasAttacked () {
+    public boolean hasAttacked() {
 
         return hasAttacked;
     }

@@ -57,17 +57,10 @@ public class Field {
         for (String s : players.keySet()) {
             int x = players.get(s).getPos().getCol();
             int y = players.get(s).getPos().getRow();
-            System.out.println("entrando no for");
 
             if (players.get(s).hasAttacked()) {
-                System.out.println( " this player has attacked");
                 for (int i =  x-1; i <= x + 1; i++) {
-
-                    System.out.println("i: " + i);
                     for (int j = y-1; j <= y + 1; j++) {
-
-                        System.out.println("j: " + j);
-                        System.out.println("printing attack to lanterna");
                         screen.putString(i, j, " ", Terminal.Color.GREEN, Terminal.Color.RED, ScreenCharacterStyle.Bold);
                     }
                 }
@@ -75,6 +68,5 @@ public class Field {
             screen.putString(x, y, Integer.toString(players.get(s).getHealth()), Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
         }
         screen.refresh();
-
     }
 }

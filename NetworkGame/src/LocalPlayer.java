@@ -29,7 +29,7 @@ public class LocalPlayer extends Player implements Runnable{
 
             String s = input.readLine();
             System.out.println(s);
-            out.write(s + "\n");
+            out.write(s +  "\n"); //":" + getHealth() +
             out.flush();
 
             String next;
@@ -38,10 +38,6 @@ public class LocalPlayer extends Player implements Runnable{
                 System.out.println(next);
                 out.write(next+'\n');
                 out.flush();
-            }
-
-            if (isDead()) {
-                out.println("dead");
             }
 
         } catch (IOException e) {
@@ -55,6 +51,18 @@ public class LocalPlayer extends Player implements Runnable{
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void loseHealth(int dmg) {
+        super.loseHealth(dmg);
+        System.out.println("dealt damage");
+        if(isDead()) {
+
+            System.out.println("deeeead");
+            out.write("dead");
+            out.flush();
         }
     }
 }

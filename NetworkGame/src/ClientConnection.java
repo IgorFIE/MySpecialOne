@@ -45,18 +45,17 @@ public class ClientConnection implements Runnable{
                 String inputStream = in.readLine();
                 System.out.println(inputStream);
 
+                //TODO - Check proper method name
+                myServer.sendToAll(myName + ":" + inputStream);
+
                 // TODO: 21/06/16 what happens when the player dies? does he get to watch??
-                if (inputStream.equals("dead") || inputStream == null) {
+                if (inputStream.equals("dead")) {
                     //TODO - Check proper method name
                     myServer.removeFromServer(this);
                     Thread.currentThread().interrupt();
                     this.clientSocket.close();
                     break;
                 }
-
-                //TODO - Check proper method name
-                myServer.sendToAll(myName + ":" + inputStream);
-
             }
         } catch (IOException e) {
             System.out.println("Error"+e.getMessage());

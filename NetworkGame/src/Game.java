@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -10,7 +13,7 @@ import java.util.HashMap;
 public class Game {
 
     private static int portNumber = 8080;
-    private static String hostName = "192.168.1.27";
+    private static String hostName = "127.0.0.1";
     private static Socket socket;
     private static BufferedReader in;
     private Thread playerThread;
@@ -68,8 +71,6 @@ public class Game {
             String line;
             while ((line = in.readLine()) != null) {
 
-
-
                 System.out.println(line);          // TODO put get input from stream in a separate method
 
                     if (line.equals("terminate")) {
@@ -96,8 +97,8 @@ public class Game {
                         System.out.println("attacking");
                         checkCollision(players.get(player).attack());
                         break;
-                    case "die":
-                        //remove player, kill thread(?)
+                    case "dead":
+                        players.remove(player);
                         break;
 
                 }
@@ -113,11 +114,14 @@ public class Game {
 
     private void checkCollision(int damage) {
 
-        for (String name : players.keySet()) {
-            Player p1 = players.get(name);
+        LinkedList<String> names = new LinkedList<>();
+        names.addAll(players.keySet());
+
+        for (int i = 0; i < names.size()-1; i++) {
+            Player p1 = players.get(names.get(i));
             
-            for (String name2: players.keySet()) {
-                Player p2 = players.get(name2);
+            for (int j = 1; j < names.size(); j++) {
+                Player p2 = players.get(names.get(j));
 
                 // TODO: 23/06/16
                 if(p2 == p1){ continue;}
