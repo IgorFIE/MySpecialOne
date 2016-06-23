@@ -47,7 +47,14 @@ public class LocalPlayer extends Player implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            out.write("dead");
+            out.flush();
             out.close();
+            try {
+                input.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

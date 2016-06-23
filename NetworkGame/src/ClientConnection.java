@@ -48,7 +48,7 @@ public class ClientConnection implements Runnable{
                 System.out.println(inputStream);
 
                 // TODO: 21/06/16 what happens when the player dies? does he get to watch??
-                if (inputStream == null) {
+                if (inputStream.equals("dead") || inputStream == null) {
                     //TODO - Check proper method name
                     myServer.removeFromServer(this);
                     Thread.currentThread().interrupt();

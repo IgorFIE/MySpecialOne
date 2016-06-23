@@ -12,6 +12,8 @@ public class Player {
 
     public Player(Position pos) {
         this.pos = pos;
+        health = 5;
+        strength = 2;
     }
 
     public int attack() {
