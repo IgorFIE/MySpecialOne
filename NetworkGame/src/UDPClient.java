@@ -8,8 +8,9 @@ public class UDPClient implements Runnable{
     private int speed = 2;
     private int health;
     private int strength;
-    private boolean dead;
-    private boolean hasAttacked;
+    private boolean dead = false;
+    private boolean hasAttacked = false;
+    private UDPServer server;
 
     String hostName;
     int portNumber;
@@ -19,9 +20,12 @@ public class UDPClient implements Runnable{
 
     DatagramSocket socket = null;
 
-    public UDPClient(String hostname, int portnumber) {
+    public UDPClient(String hostname, int portnumber, Position pos, UDPServer server) {
+        this.server = server;
+        this.pos = pos;
         this.hostName = hostname;
         this.portNumber = portnumber;
+
     }
 
     public void dialogue() {
@@ -124,6 +128,8 @@ public class UDPClient implements Runnable{
                 break;
 
         }
+
+        server.sendToAll(toString());
     }
 
     public boolean isDead() {
@@ -154,5 +160,10 @@ public class UDPClient implements Runnable{
     @Override
     public void run() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "json";
     }
 }

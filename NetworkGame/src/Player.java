@@ -35,46 +35,46 @@ public class Player {
         }
     }
 
-    public void move(String direction) {
-
-        hasAttacked = false;
-
-        switch (direction) {
-
-            case "up":
-                if (getPos().getRow() - getSpeed() < 0) {
-                    getPos().setRow(0);
-                } else {
-                    getPos().setRow(getPos().getRow() - getSpeed());
-                }
-                break;
-
-            case "down":
-                if (getPos().getRow() + getSpeed() > Field.height - 1) {
-                    getPos().setRow(Field.height - 1);
-                } else {
-                    getPos().setRow(getPos().getRow() + getSpeed());
-                }
-                break;
-
-            case "left":
-                if (getPos().getCol() - getSpeed() < 0) {
-                    getPos().setCol(0);
-                } else {
-                    getPos().setCol(getPos().getCol() - getSpeed());
-                }
-                break;
-
-            case "right":
-                if (getPos().getCol() + getSpeed() > Field.width - 1) {
-                    getPos().setCol(Field.width - 1);
-                } else {
-                    getPos().setCol(getPos().getCol() + getSpeed());
-                }
-                break;
-
-        }
-    }
+//    public void move(String direction) {
+//
+//        hasAttacked = false;
+//
+//        switch (direction) {
+//
+//            case "up":
+//                if (getPos().getRow() - getSpeed() < 0) {
+//                    getPos().setRow(0);
+//                } else {
+//                    getPos().setRow(getPos().getRow() - getSpeed());
+//                }
+//                break;
+//
+//            case "down":
+//                if (getPos().getRow() + getSpeed() > Field.height - 1) {
+//                    getPos().setRow(Field.height - 1);
+//                } else {
+//                    getPos().setRow(getPos().getRow() + getSpeed());
+//                }
+//                break;
+//
+//            case "left":
+//                if (getPos().getCol() - getSpeed() < 0) {
+//                    getPos().setCol(0);
+//                } else {
+//                    getPos().setCol(getPos().getCol() - getSpeed());
+//                }
+//                break;
+//
+//            case "right":
+//                if (getPos().getCol() + getSpeed() > Field.width - 1) {
+//                    getPos().setCol(Field.width - 1);
+//                } else {
+//                    getPos().setCol(getPos().getCol() + getSpeed());
+//                }
+//                break;
+//
+//        }
+//    }
 
     public boolean isDead() {
         return dead;
