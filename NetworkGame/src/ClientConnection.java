@@ -24,25 +24,21 @@ public class ClientConnection implements Runnable{
      * @param clientSocket - Socket for player connection to the server.
      * @param server - The server that controls and distributes player updates.
      */
-    public ClientConnection(Socket clientSocket, Server server){ this.clientSocket = clientSocket; this.myServer = server;}
+    public ClientConnection(Socket clientSocket, Server server) throws IOException {
+
+        this.clientSocket = clientSocket; this.myServer = server;
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+        send("Enter your name.");
+        myName = in.readLine();
+    }
 
     public void run() {
 
+        String inputStream = "";
         try {
+            while ((inputStream = in.readLine())!= null) {
 
-            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new PrintWriter(clientSocket.getOutputStream(), true);
-
-            send("Enter your name.");
-            myName = in.readLine();
-            System.out.println(myName);
-            myServer.areYouReady();
-
-            waitForGo();
-
-            while (go) {
-
-                String inputStream = in.readLine();
                 System.out.println(inputStream);
 
                 //TODO - Check proper method name

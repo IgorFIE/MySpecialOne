@@ -28,20 +28,11 @@ public class Server {
         try {
             serverSocket = new ServerSocket(portNumber);
             init();
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            closeServer();
         }
-
     }
 
     /**
@@ -53,19 +44,27 @@ public class Server {
      */
     public void init() {
         try {
-            while (true) {
 
+            while (true) {
                 waitClientConnections();
-                waitClientNames();
-                setGoToAll();
 
                 sendToAll(clientList.get(0).getMyName() + ":" + clientList.get(1).getMyName());
                 sendToAll("start");
-
                 roomFull();
             }
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Close the server Socket
+     */
+    public void closeServer(){
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -77,37 +76,15 @@ public class Server {
      *
      * @throws IOException
      */
-    private synchronized void waitClientConnections() throws IOException {
+    private void waitClientConnections() throws IOException {
         while (clientList.size() < 2) {
             Socket clientSocket = serverSocket.accept();
             System.out.println("###" + clientSocket.getLocalAddress() + ": has enter the room! ###");
             ClientConnection client = new ClientConnection(clientSocket, this);
-            clientList.add(client);
             pool.submit(client);
+            clientList.add(client);
         }
-        System.out.println("room full, waiting for names");
-    }
-
-    /**
-     * This method will wait for all the clients Names
-     *
-     * @throws InterruptedException
-     */
-    private synchronized void waitClientNames() throws InterruptedException {
-        while (!letsGo) {
-            System.out.println("server still waiting for all names set");
-            wait(2000);
-        }
-    }
-
-    /**
-     * Set Go to all clientConnections
-     */
-    private synchronized void setGoToAll() {
-        for (ClientConnection c : clientList) {
-            c.setGo();
-        }
-        notifyAll();
+        System.out.println("room full");
     }
 
     /**
@@ -121,20 +98,6 @@ public class Server {
                 e.printStackTrace();
             }
         }
-        notifyAll();
-    }
-
-    /**
-     * check if all players have set their names
-     * If true we change the value of letsGo to True
-     */
-    public void areYouReady() {
-        int i;
-        for (i = 0; i < clientList.size(); i++) {
-            if (clientList.get(i).getMyName() == null) break;
-        }
-
-        if (i == 2) letsGo = true;
     }
 
     /**
@@ -154,7 +117,8 @@ public class Server {
      *
      * @param client client to remove from the client list
      */
-    public void removeFromServer(ClientConnection client) {
+    public synchronized void removeFromServer(ClientConnection client) {
         clientList.remove(client);
+        notifyAll();
     }
 }

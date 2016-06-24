@@ -144,8 +144,16 @@ public class Game {
     }
 
     private void createPlayers(String[] names) { // which is local player's name
-        players.put(names[0], localPlayer);
-        players.put(names[1], new Player(new Position(25, 25)));
+
+        for (int i = 0; i < names.length; i++) {
+
+           if (names[i].equals(localPlayer.getName())) {
+                players.put(names[i], localPlayer);
+            } else {
+                // TODO: 23/06/16 fix this, send position when create player
+                players.put(names[i], new Player(new Position(25, 25)));
+            }
+        }
     }
 
     private void close() {

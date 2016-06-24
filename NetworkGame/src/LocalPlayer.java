@@ -11,6 +11,7 @@ public class LocalPlayer extends Player implements Runnable{
 
     private Socket clientSocket;
     private PrintWriter out;
+    private String name;
 
     LocalPlayer(Socket clientSocket){
         super(new Position(20,20));
@@ -27,9 +28,11 @@ public class LocalPlayer extends Player implements Runnable{
 
             out = new PrintWriter(clientSocket.getOutputStream());
 
+
             String s = input.readLine();
             System.out.println(s);
-            out.write(s +  "\n"); //":" + getHealth() +
+            name = s;
+            out.write(name + "\n"); //":" + getHealth() +
             out.flush();
 
             String next;
@@ -64,6 +67,10 @@ public class LocalPlayer extends Player implements Runnable{
             out.write("dead");
             out.flush();
         }
+    }
+
+    public String getName() {
+        return name;
     }
 }
 
