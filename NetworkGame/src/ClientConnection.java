@@ -26,7 +26,7 @@ public class ClientConnection implements Runnable{
      */
     public ClientConnection(Socket clientSocket, Server server) throws IOException {
 
-        this.clientSocket = clientSocket; this.myServer = server;
+        this.clientSocket = clientSocket;this.myServer = server;
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         out = new PrintWriter(clientSocket.getOutputStream(), true);
         send("Enter your name.");
