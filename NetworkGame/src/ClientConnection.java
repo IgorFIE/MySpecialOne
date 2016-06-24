@@ -44,8 +44,8 @@ public class ClientConnection implements Runnable{
 
                 if (inputStream.equals("dead")) {
                     myServer.removeFromServer(this);
-                    Thread.currentThread().interrupt();
                     this.clientSocket.close();
+                    Thread.currentThread().interrupt();
                     break;
                 }
             }

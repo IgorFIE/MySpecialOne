@@ -64,7 +64,7 @@ public class LocalPlayer extends Player implements Runnable{
         if(isDead()) {
 
             System.out.println("deeeead");
-            out.write("dead");
+            out.write("dead" + '\n');
             out.flush();
         }
     }

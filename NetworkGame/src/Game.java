@@ -66,7 +66,7 @@ public class Game {
 
         try {
             String line;
-            while ((line = in.readLine()) != null) {
+            while (!socket.isClosed() && (line = in.readLine()) != null) {
 
                 System.out.println(line);          // TODO put get input from stream in a separate method
 
@@ -92,7 +92,7 @@ public class Game {
                         break;
                     case "attack":
                         System.out.println("attacking");
-                        checkCollision(players.get(player).attack());
+                        checkCollision(players.get(player));
                         break;
                     case "dead":
                         players.remove(player);
@@ -102,6 +102,7 @@ public class Game {
                 Field.draw(players);
             }
 
+            System.out.println("you have died, you have been disconnected.");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -109,28 +110,18 @@ public class Game {
         }
     }
 
-    private void checkCollision(int damage) {
+    private void checkCollision(Player player) {
 
         LinkedList<String> names = new LinkedList<>();
         names.addAll(players.keySet());
 
-        for (int i = 0; i < names.size()-1; i++) {
-            Player p1 = players.get(names.get(i));
-            
-            for (int j = 1; j < names.size(); j++) {
-                Player p2 = players.get(names.get(j));
+        for (int i = 0; i < names.size(); i++) {
+            Player p2 = players.get(names.get(i));
+            if (p2 == player) {
+                continue;
 
-                // TODO: 23/06/16
-                if(p2 == p1){ continue;}
-
-                if(checkCrash(p1.getPos(), p2.getPos())) {
-                    System.out.println("crashed");
-                    if (p1.hasAttacked()) {
-                        p2.loseHealth(damage);
-                    } else if (p2.hasAttacked()) {
-                        p1.loseHealth(damage);
-                    }
-                }
+            } else if (checkCrash(player.getPos(), p2.getPos())) {
+                p2.loseHealth(player.attack());
             }
         }
     }
@@ -147,7 +138,7 @@ public class Game {
 
         for (int i = 0; i < names.length; i++) {
 
-           if (myNumber.equals(i)) {
+           if (myNumber.equals(Integer.toString(i+1))) {
                 players.put(names[i], localPlayer);
                localPlayer.getPos().setCol(i);
                localPlayer.getPos().setRow(i);
