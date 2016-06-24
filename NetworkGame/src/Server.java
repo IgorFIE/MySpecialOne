@@ -61,7 +61,7 @@ public class Server {
     /**
      * Close the server Socket
      */
-    public void closeServer(){
+    public void closeServer() {
         try {
             serverSocket.close();
         } catch (IOException e) {
@@ -83,6 +83,7 @@ public class Server {
             ClientConnection client = new ClientConnection(clientSocket, this);
             pool.submit(client);
             clientList.add(client);
+            client.send("" + clientList.size());
         }
         System.out.println("room full");
     }

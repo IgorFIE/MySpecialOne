@@ -3,9 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
 
 /**
  * Created by codecadet on 20/06/16.
@@ -19,6 +17,7 @@ public class Game {
     private Thread playerThread;
     private HashMap<String, Player> players;
     private LocalPlayer localPlayer;
+    private String myNumber;
 
     // create a game object class from wich player extends
     // hashmap with key as player name and game object as value
@@ -31,17 +30,15 @@ public class Game {
             String str;
 
             System.out.println(in.readLine());
-            str = in.readLine();
-            System.out.println(str);
-            String[] names = str.split(":");
-            System.out.println(names.length);
-            System.out.println(names);
+            game.myNumber = in.readLine();
+            System.out.println(game.myNumber);
+            String playerNames = in.readLine();
 
             str = in.readLine();
             System.out.println(str);
             if (str.equals("start")) {
                 System.out.println("started game");
-                game.start(names);
+                game.start(playerNames);
 
             }
         } catch (IOException e) {
@@ -59,9 +56,9 @@ public class Game {
         Field.init(100, 25);
     }
 
-    public void start(String[] names) {
+    public void start(String playerNames) {
 
-        createPlayers(names);
+        createPlayers(playerNames);
         Field.draw(players);
         String[] input;
         String player;
@@ -143,15 +140,21 @@ public class Game {
                 Math.abs(pos1.getOutRow() - pos2.getOutRow()) <= pos1.getHeight() / 2 + pos2.getHeight() / 2;
     }
 
-    private void createPlayers(String[] names) { // which is local player's name
+    private void createPlayers(String playerNames) { // which is local player's name
+
+        String[] names = playerNames.split(":");
+        players = new HashMap<>(names.length);
 
         for (int i = 0; i < names.length; i++) {
 
-           if (names[i].equals(localPlayer.getName())) {
+           if (myNumber.equals(i)) {
                 players.put(names[i], localPlayer);
+               localPlayer.getPos().setCol(i);
+               localPlayer.getPos().setRow(i);
+
             } else {
                 // TODO: 23/06/16 fix this, send position when create player
-                players.put(names[i], new Player(new Position(25, 25)));
+                players.put(names[i], new Player(new Position(i, i)));
             }
         }
     }
