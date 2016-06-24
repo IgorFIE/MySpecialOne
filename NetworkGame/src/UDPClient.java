@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.net.*;
 
-public class UDPClient implements Runnable{
+public class UDPClient implements Runnable {
 
     private String name;
     private Position pos;
@@ -11,56 +11,40 @@ public class UDPClient implements Runnable{
     private boolean dead = false;
     private boolean hasAttacked = false;
     private UDPServer server;
-
-    String hostName;
-    int portNumber;
+    private int clientListSize;
+    private InetAddress address;
+    private int port;
+    private String playerCommand;
 
     byte[] sendBuffer;
     byte[] recvBuffer = new byte[1024];
 
     DatagramSocket socket = null;
 
-    public UDPClient(String hostname, int portnumber, Position pos, UDPServer server) {
-        this.server = server;
+    public UDPClient(InetAddress address, int port, Position pos, int clientlistsize, UDPServer server) {
+        this.address = address;
+        this.port = port;
         this.pos = pos;
-        this.hostName = hostname;
-        this.portNumber = portnumber;
+        this.clientListSize = clientlistsize;
+        this.server = server;
 
+    }
+
+    public UDPClient(){
+        System.out.println(this);
     }
 
     public void dialogue() {
 
-        try {
-            socket = new DatagramSocket();
-        } catch (SocketException e) {
-            System.out.println("No socket available! " + e.getMessage());
-        }
 
         while (true) {
-
-            //TODO - Don't know what the fuck i'm doing lol! NVM Check this sh!t
-            DatagramPacket sendJSON = null;
-
-            try {
-                sendBuffer = new String("Send to UDPclient").getBytes();
-                sendJSON = new DatagramPacket(sendBuffer, sendBuffer.length, InetAddress.getByName(hostName), portNumber);
-            } catch (UnknownHostException e) {
-                System.out.println("Don't know or can't connect to host!");
-                e.printStackTrace();
-            }
-
-            try {
-                socket.send(sendJSON);
-            } catch (IOException e) {
-                System.out.println("ERROR Sending! " + e.getMessage());
-            }
 
             //TODO - Don't know what the fuck i'm doing lol! NVM Check this sh!t
             DatagramPacket receiveJSON = new DatagramPacket(recvBuffer, recvBuffer.length);
 
             try {
                 socket.receive(receiveJSON);
-                String receiveFromUDPClient = recvBuffer.toString();
+                playerCommand = recvBuffer.toString();
                 System.out.println(new String(recvBuffer, 0, receiveJSON.getLength()));
             } catch (IOException e) {
                 System.out.println("ERROR Receiving! " + e.getMessage());
@@ -129,7 +113,7 @@ public class UDPClient implements Runnable{
 
         }
 
-        server.sendToAll(toString());
+        server.sendToAll();
     }
 
     public boolean isDead() {
@@ -162,8 +146,22 @@ public class UDPClient implements Runnable{
 
     }
 
+    public void send(String UPCLientToString) {
+
+        try {
+
+            sendBuffer = UPCLientToString.getBytes();
+            DatagramPacket sendJSON = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
+            socket.send(sendJSON);
+
+        } catch (IOException e) {
+            System.out.println("Error" +e.getMessage());
+        }
+    }
+
+    
     @Override
     public String toString() {
-        return "json";
+        return "{"+name+","+pos.getCol()+","+pos.getRow()+","+health+","+strength+","+dead+","+hasAttacked+"}";
     }
 }

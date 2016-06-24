@@ -19,6 +19,7 @@ public class UDPServer {
     DatagramSocket socket = null;
     private int portnumber;
     private String hostname;
+    private Position pos;
 
     private HashMap<InetAddress, Integer> IPlist = new HashMap<>();
     private List<UDPClient> clientList = Collections.synchronizedList(new LinkedList<>());
@@ -58,7 +59,7 @@ public class UDPServer {
                 socket.receive(receiveClient);
 
                 //TODO missing position in UDP client
-                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),clientList.size()+1,this);
+                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),pos,clientList.size()+1,this);
                 clientList.add(clientConnection);
                 IPlist.put(receiveClient.getAddress(),receiveClient.getPort());
                 pool.submit(clientConnection);
