@@ -33,7 +33,7 @@ public class UDPServer {
             this.hostname = hostname;
             this.portnumber = portnumber;
         try {
-            DatagramSocket socket = new DatagramSocket(portnumber);
+            socket = new DatagramSocket(portnumber);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -128,8 +128,8 @@ public class UDPServer {
 
     private void createPositions(){
 
-        clientList.get(0).setPos(new Position(12,33));
-        clientList.get(1).setPos(new Position(12,82));
+        clientList.get(0).setPos(new Position(33,12));
+        clientList.get(1).setPos(new Position(82,12));
 
         /*Position pos = new Position(50,12);
 

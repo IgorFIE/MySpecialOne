@@ -68,17 +68,14 @@ public class Field {
                 for (int i = x - 1; i <= x + 1; i++) {
                     for (int j = y - 1; j <= y + 1; j++) {
                         screen.putString(i, j, " ", Terminal.Color.GREEN, Terminal.Color.RED, ScreenCharacterStyle.Bold);
-                        System.out.println("damage deal");
                     }
                 }
             }
             if (s.equals(player.getName())) {
                 screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.RED, ScreenCharacterStyle.Bold);
-                System.out.println("draw mine");
 
             } else {
                 screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
-                System.out.println("draw yours");
 
             }
         }

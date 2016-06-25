@@ -38,13 +38,9 @@ public class UDPLocalPlayer implements Runnable{
             while(true){
 
                 String action = input.readLine();
-                //if(action != null && action.toLowerCase().matches("[up][down][left][right][attack]")) {
-                    System.out.println(action);
                     bytesToSend = action.getBytes();
                     packet = new DatagramPacket(bytesToSend, bytesToSend.length, hostAddress, port);
                     socket.send(packet);
-                //}
-
             }
 
         } catch (IOException e) {

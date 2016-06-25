@@ -26,6 +26,7 @@ public class UDPGame {
         gameSocket = new DatagramSocket();
         player = new UDPLocalPlayer(InetAddress.getByName("localhost"),8080,gameSocket);
         Thread thead = new Thread(player);
+        thead.start();
 
         DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
         gameSocket.receive(receivePacket);
@@ -39,8 +40,6 @@ public class UDPGame {
         Field.init(100, 25);
 
         Field.draw(players,player);
-
-        thead.start();
     }
 
     private void start () {
@@ -82,7 +81,6 @@ public class UDPGame {
             players.put(name,array);
         }
 
-        System.out.println("hasmap size:"+players.size());
     }
 
 }
