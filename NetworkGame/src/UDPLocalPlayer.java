@@ -32,7 +32,7 @@ public class UDPLocalPlayer implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println("im here");
+            System.out.println("im here!!!");
             name = input.readLine();
             System.out.println(name);
             byte[] bytesToSend = name.getBytes();
