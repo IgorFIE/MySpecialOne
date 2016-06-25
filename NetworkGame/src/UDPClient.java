@@ -26,33 +26,31 @@ public class UDPClient implements Runnable {
         this.port = port;
         this.playerNumber = playerNumber;
         this.server = server;
-
     }
 
-    public UDPClient(){
-        System.out.println(this);
-    }
+    @Override
+    public void run() {
 
-    public void dialogue() {
-
-
-        while (true) {
-
-            //TODO - Don't know what the fuck i'm doing lol! NVM Check this sh!t
-            DatagramPacket receiveJSON = new DatagramPacket(recvBuffer, recvBuffer.length);
-
-            try {
-                socket.receive(receiveJSON);
-                playerCommand = recvBuffer.toString();
-                System.out.println(new String(recvBuffer, 0, receiveJSON.getLength()));
-            } catch (IOException e) {
-                System.out.println("ERROR Receiving! " + e.getMessage());
-            }
-
+        while(true) {
+            playerAction(dialogue());
         }
     }
 
-    public void gameLogic(String command) {
+    public String dialogue() {
+
+            //TODO - Don't know what the fuck i'm doing lol! NVM Check this sh!t
+            DatagramPacket receiveJSON = new DatagramPacket(recvBuffer, recvBuffer.length);
+            try {
+                socket.receive(receiveJSON);
+                playerCommand = recvBuffer.toString();
+                System.out.println(playerCommand);
+            } catch (IOException e) {
+                System.out.println("ERROR Receiving! " + e.getMessage());
+            }
+        return playerCommand;
+    }
+
+    public void playerAction(String command) {
 
         switch (command) {
             case "up":
@@ -69,25 +67,7 @@ public class UDPClient implements Runnable {
                 server.removeClient(this);
                 break;
         }
-    }
-
-    public int attack() {
-
-        if (!hasAttacked) {
-            hasAttacked = true;
-            return strength;
-        }
-        return 0;
-    }
-
-    public void loseHealth(int dmg) {
-        System.out.println("lost health");
-        health -= dmg;
-        System.out.println("current health" + health);
-        if (health <= 0) {
-            health = 0;
-            dead = true;
-        }
+        server.sendToAll();
     }
 
     public void move(String direction) {
@@ -127,15 +107,26 @@ public class UDPClient implements Runnable {
                     getPos().setCol(getPos().getCol() + getSpeed());
                 }
                 break;
-
         }
-
-        server.sendToAll();
     }
 
-    @Override
-    public void run() {
+    public int attack() {
 
+        if (!hasAttacked) {
+            hasAttacked = true;
+            return strength;
+        }
+        return 0;
+    }
+
+    public void loseHealth(int dmg) {
+        System.out.println("lost health");
+        health -= dmg;
+        System.out.println("current health" + health);
+        if (health <= 0) {
+            health = 0;
+            dead = true;
+        }
     }
 
     public void send(String UPCLientToString) {
@@ -153,7 +144,13 @@ public class UDPClient implements Runnable {
 
     @Override
     public String toString() {
-        return "{"+name+","+pos.getCol()+","+pos.getRow()+","+health+","+strength+","+dead+","+hasAttacked+"}";
+        return "{name:"+ name+ "," +
+                "col:"+ pos.getCol() + "," +
+                "row:"+ pos.getRow() + "," +
+                "health:" + health + ","+
+                "dead:" + dead + "," +
+                "hasAttacked:" + hasAttacked + "," +
+                "playerNumber:" + playerNumber + "," + "}";
     }
 
 
@@ -174,7 +171,6 @@ public class UDPClient implements Runnable {
     }
 
     public boolean hasAttacked() {
-
         return hasAttacked;
     }
 

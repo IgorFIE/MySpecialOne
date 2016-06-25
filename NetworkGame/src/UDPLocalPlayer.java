@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 
 /**
  * Created by codecadet on 24/06/16.
@@ -17,17 +18,23 @@ public class UDPLocalPlayer implements Runnable{
     DatagramSocket socket;
 
 
-    public UDPLocalPlayer () {
-        input = new BufferedReader(new InputStreamReader(System.in));
-
+    public UDPLocalPlayer (InetAddress hostAddress,int port) {
+        this.hostAddress = hostAddress;
+        this.port = port;
+        try {
+            socket = new DatagramSocket();
+            input = new BufferedReader(new InputStreamReader(System.in));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
         try {
-
-            socket = new DatagramSocket();
+            System.out.println("im here");
             name = input.readLine();
+            System.out.println(name);
             byte[] bytesToSend = name.getBytes();
             DatagramPacket packet = new DatagramPacket(bytesToSend, bytesToSend.length, hostAddress, port);
             socket.send(packet);

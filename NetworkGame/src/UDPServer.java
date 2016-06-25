@@ -13,6 +13,11 @@ import java.util.concurrent.Executors;
 
 public class UDPServer {
 
+    public static void main(String[] args) {
+        UDPServer server = new UDPServer("127.0.0.1", 8080);
+        server.startServer();
+    }
+
     byte[] sendBuffer = new byte[1024];
     byte[] recvBuffer = new byte[1024];
 

@@ -94,7 +94,7 @@ public class Game {
                     case "down":
                     case "left":
                     case "right":
-                        players.get(player).move(input[1]);
+                        //players.get(player).move(input[1]);
                         break;
                     case "attack":
                         System.out.println("attacking");
