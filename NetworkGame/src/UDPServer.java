@@ -33,7 +33,7 @@ public class UDPServer {
             this.hostname = hostname;
             this.portnumber = portnumber;
         try {
-            socket = new DatagramSocket(portnumber);
+            DatagramSocket socket = new DatagramSocket(portnumber);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -59,14 +59,13 @@ public class UDPServer {
 
         while(clientList.size() < 2){
             try {
-
                 DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
                 socket.receive(receiveClient);
 
                 String message = new String(recvBuffer,0,receiveClient.getLength());
 
                 //TODO missing position in UDP client
-                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),clientList.size()+1,this);
+                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),clientList.size()+1,new DatagramSocket(),this);
                 clientConnection.setName(message);
                 clientList.add(clientConnection);
                 IPlist.put(receiveClient.getAddress(),receiveClient.getPort());

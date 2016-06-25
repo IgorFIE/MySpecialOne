@@ -65,5 +65,9 @@ public class UDPLocalPlayer implements Runnable{
     public String getName() {
         return name;
     }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
 }
 

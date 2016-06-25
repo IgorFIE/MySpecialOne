@@ -11,7 +11,7 @@ public class UDPGame {
         try {
             UDPGame game = new UDPGame();
             game.start();
-        } catch (UnknownHostException | SocketException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -21,13 +21,26 @@ public class UDPGame {
     private byte[] receiveData = new byte[1024];
     private HashMap<String,String[]> players = new HashMap<>();
 
-    public UDPGame() throws UnknownHostException, SocketException {
+    public UDPGame() throws IOException {
 
         gameSocket = new DatagramSocket();
         player = new UDPLocalPlayer(InetAddress.getByName("localhost"),8080,gameSocket);
         Thread thead = new Thread(player);
-        thead.start();
+
+        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        gameSocket.receive(receivePacket);
+
+        player.setPort(receivePacket.getPort());
+
+        String message = new String(receiveData, 0, receivePacket.getLength());
+
+        parseJSON(message);
+
         Field.init(100, 25);
+
+        Field.draw(players,player);
+
+        thead.start();
     }
 
     private void start () {

@@ -15,30 +15,27 @@ public class UDPClient implements Runnable {
     private InetAddress address;
     private int port;
     private String message;
-    private final int FIELD_HEIGHT = 100;
-    private final int FIELD_WIDTH = 25;
+    private final int FIELD_HEIGHT = 25;
+    private final int FIELD_WIDTH = 100;
     byte[] sendBuffer;
     byte[] recvBuffer = new byte[1024];
 
     DatagramSocket socket = null;
 
-    public UDPClient(InetAddress address, int port, int playerNumber, UDPServer server) throws SocketException {
+    public UDPClient(InetAddress address, int port, int playerNumber,DatagramSocket socket, UDPServer server) throws SocketException {
         this.address = address;
         this.port = port;
         this.playerNumber = playerNumber;
         this.server = server;
-        this.socket = server.socket;
+        this.socket = socket;
     }
 
     @Override
     public void run() {
 
         while(true) {
-            System.out.println("action");
             playerAction(dialogue());
-            System.out.println("send to all");
             server.sendToAll();
-            System.out.println(pos.getCol() + ":" + pos.getRow());
         }
     }
 
@@ -48,6 +45,8 @@ public class UDPClient implements Runnable {
             DatagramPacket receiveJSON = new DatagramPacket(recvBuffer, recvBuffer.length);
             try {
                 socket.receive(receiveJSON);
+
+                System.out.println(receiveJSON.getAddress());
 
                 message = new String(recvBuffer, 0, receiveJSON.getLength());
 
@@ -66,11 +65,9 @@ public class UDPClient implements Runnable {
             case "down":
             case "left":
             case "right":
-                System.out.println("move");
                 move(command);
                 break;
             case "attack":
-                System.out.println("attacking");
                 server.checkCollision(this);
                 break;
             case "dead":
@@ -82,7 +79,6 @@ public class UDPClient implements Runnable {
     public void move(String direction) {
 
         hasAttacked = false;
-        System.out.println("client connet "+direction);
 
         switch (direction) {
             case "up":
