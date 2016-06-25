@@ -57,12 +57,8 @@ public class Field {
         screen.clear();
         for (String s : players.keySet()) {
 
-            System.out.println();
-
             int x = Integer.parseInt((players.get(s))[0]);
             int y = Integer.parseInt((players.get(s))[1]);
-
-            System.out.println(x + ":" + y);
 
             if (players.get(s)[4].equals("true")) {
                 for (int i = x - 1; i <= x + 1; i++) {

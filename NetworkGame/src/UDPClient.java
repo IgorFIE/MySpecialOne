@@ -15,8 +15,6 @@ public class UDPClient implements Runnable {
     private InetAddress address;
     private int port;
     private String message;
-    private final int FIELD_HEIGHT = 25;
-    private final int FIELD_WIDTH = 100;
     byte[] sendBuffer;
     byte[] recvBuffer = new byte[1024];
 
@@ -92,8 +90,8 @@ public class UDPClient implements Runnable {
 
             case "down":
 
-                if (pos.getRow() + getSpeed() > FIELD_HEIGHT - 1) {
-                    pos.setRow(Field.height - 1);
+                if (pos.getRow() + getSpeed() > server.FIELD_HEIGHT - 1) {
+                    pos.setRow(server.FIELD_HEIGHT - 1);
                 } else {
                     pos.setRow(pos.getRow() + getSpeed());
                 }
@@ -108,8 +106,8 @@ public class UDPClient implements Runnable {
                 break;
 
             case "right":
-                if (pos.getCol() + getSpeed() > FIELD_WIDTH - 1) {
-                    pos.setCol(Field.width - 1);
+                if (pos.getCol() + getSpeed() > server.FIELD_WIDTH - 1) {
+                    pos.setCol(server.FIELD_WIDTH - 1);
                 } else {
                     pos.setCol(pos.getCol() + getSpeed());
                 }

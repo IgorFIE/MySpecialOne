@@ -25,6 +25,9 @@ public class UDPServer {
     private int portnumber;
     private String hostname;
 
+    public final int FIELD_HEIGHT = 25;
+    public final int FIELD_WIDTH = 100;
+
     private HashMap<InetAddress, Integer> IPlist = new HashMap<>();
     private List<UDPClient> clientList = Collections.synchronizedList(new LinkedList<>());
     private ExecutorService pool = Executors.newFixedThreadPool(2);
@@ -57,7 +60,7 @@ public class UDPServer {
 
     private void waitClientConnection() {
 
-        while(clientList.size() < 2){
+        while(clientList.size() < 3{
             try {
                 DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
                 socket.receive(receiveClient);
@@ -112,7 +115,7 @@ public class UDPServer {
     }
 
     private synchronized void roomFull() {
-        while (clientList.size() == 2) {
+        while (clientList.size() == 3) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -128,8 +131,41 @@ public class UDPServer {
 
     private void createPositions(){
 
-        clientList.get(0).setPos(new Position(33,12));
-        clientList.get(1).setPos(new Position(82,12));
+        //clientList.get(0).setPos(new Position(33,12));
+        //clientList.get(1).setPos(new Position(82,12));
+
+        switch (clientList.size()){
+            case 2:
+                mySpecialGenerator(2,1,2);
+                break;
+            case 4:
+                mySpecialGenerator(2,2,1);
+                break;
+            case 6:
+                mySpecialGenerator(3,2,1);
+                break;
+            case 8:
+                mySpecialGenerator(4,2,1);
+                break;
+            case 10:
+                mySpecialGenerator(5,2,1);
+                break;
+            case 12:
+                mySpecialGenerator(4,3,1);
+                break;
+            case 14:
+                mySpecialGenerator(7,2,1);
+                break;
+            case 16:
+                mySpecialGenerator(4,4,1);
+                break;
+            case 18:
+                mySpecialGenerator(6,3,1);
+                break;
+            case 20:
+                mySpecialGenerator(5,4,1);
+                break;
+        }
 
         /*Position pos = new Position(50,12);
 
@@ -137,4 +173,21 @@ public class UDPServer {
             clientList.get(i).setPos(pos);
         }*/
     }
+
+    private void mySpecialGenerator(int cols, int rows, int a){
+
+        int count = 0;
+
+        for(int i = 0 ; i < rows;i++){
+            int row = (2*i+1)/(clientList.size());
+            for (int j = 0; j < cols;j++){
+                int col = (2*j+1)/(a*clientList.size());
+                if(clientList.get(count) != null) {
+                    clientList.get(count).setPos(new Position(col * FIELD_WIDTH, row * FIELD_HEIGHT));
+                }
+                count++;
+            }
+        }
+    }
+
 }
