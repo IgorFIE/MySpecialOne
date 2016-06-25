@@ -26,6 +26,11 @@ public class UDPClient implements Runnable {
         this.port = port;
         this.playerNumber = playerNumber;
         this.server = server;
+        try {
+            socket = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

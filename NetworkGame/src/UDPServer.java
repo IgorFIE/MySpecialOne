@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 public class UDPServer {
 
     public static void main(String[] args) {
-        UDPServer server = new UDPServer("127.0.0.1", 8080);
+        UDPServer server = new UDPServer("192.168.1.27", 8080);
         server.startServer();
     }
 
