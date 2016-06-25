@@ -18,21 +18,17 @@ public class UDPLocalPlayer implements Runnable{
     DatagramSocket socket;
 
 
-    public UDPLocalPlayer (InetAddress hostAddress,int port) {
+    public UDPLocalPlayer (InetAddress hostAddress,int port,DatagramSocket gameSocket) {
         this.hostAddress = hostAddress;
         this.port = port;
-        try {
-            socket = new DatagramSocket();
-            input = new BufferedReader(new InputStreamReader(System.in));
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        socket = gameSocket;
+        input = new BufferedReader(new InputStreamReader(System.in));
     }
 
     @Override
     public void run() {
         try {
-            System.out.println("im here!!!");
+            System.out.println("Enter your name...");
             name = input.readLine();
             System.out.println(name);
             byte[] bytesToSend = name.getBytes();
@@ -42,12 +38,12 @@ public class UDPLocalPlayer implements Runnable{
             while(true){
 
                 String action = input.readLine();
-                if(action != null && action.toLowerCase().matches("[up][down][left][right][attack]")) {
+                //if(action != null && action.toLowerCase().matches("[up][down][left][right][attack]")) {
                     System.out.println(action);
                     bytesToSend = action.getBytes();
                     packet = new DatagramPacket(bytesToSend, bytesToSend.length, hostAddress, port);
                     socket.send(packet);
-                }
+                //}
 
             }
 
@@ -66,5 +62,8 @@ public class UDPLocalPlayer implements Runnable{
 
     }
 
+    public String getName() {
+        return name;
+    }
 }
 

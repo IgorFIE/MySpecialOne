@@ -14,30 +14,31 @@ public class UDPClient implements Runnable {
     private int playerNumber;
     private InetAddress address;
     private int port;
-    private String playerCommand;
-
+    private String message;
+    private final int FIELD_HEIGHT = 100;
+    private final int FIELD_WIDTH = 25;
     byte[] sendBuffer;
     byte[] recvBuffer = new byte[1024];
 
     DatagramSocket socket = null;
 
-    public UDPClient(InetAddress address, int port, int playerNumber, UDPServer server) {
+    public UDPClient(InetAddress address, int port, int playerNumber, UDPServer server) throws SocketException {
         this.address = address;
         this.port = port;
         this.playerNumber = playerNumber;
         this.server = server;
-        try {
-            socket = new DatagramSocket();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+        socket = server.socket;
     }
 
     @Override
     public void run() {
 
         while(true) {
+            System.out.println("action");
             playerAction(dialogue());
+            System.out.println("send to all");
+            server.sendToAll();
+            System.out.println(pos.getCol() + ":" + pos.getRow());
         }
     }
 
@@ -47,12 +48,15 @@ public class UDPClient implements Runnable {
             DatagramPacket receiveJSON = new DatagramPacket(recvBuffer, recvBuffer.length);
             try {
                 socket.receive(receiveJSON);
-                playerCommand = recvBuffer.toString();
-                System.out.println(playerCommand);
+
+                message = new String(recvBuffer, 0, receiveJSON.getLength());
+
+                System.out.println(message);
+
             } catch (IOException e) {
                 System.out.println("ERROR Receiving! " + e.getMessage());
             }
-        return playerCommand;
+        return message;
     }
 
     public void playerAction(String command) {
@@ -62,6 +66,7 @@ public class UDPClient implements Runnable {
             case "down":
             case "left":
             case "right":
+                System.out.println("move");
                 move(command);
                 break;
             case "attack":
@@ -72,44 +77,45 @@ public class UDPClient implements Runnable {
                 server.removeClient(this);
                 break;
         }
-        server.sendToAll();
     }
 
     public void move(String direction) {
 
         hasAttacked = false;
+        System.out.println("client connet "+direction);
 
         switch (direction) {
-
             case "up":
-                if (getPos().getRow() - getSpeed() < 0) {
-                    getPos().setRow(0);
+
+                if (pos.getRow() - getSpeed() < 0) {
+                    pos.setRow(0);
                 } else {
-                    getPos().setRow(getPos().getRow() - getSpeed());
+                    pos.setRow(pos.getRow() - getSpeed());
                 }
                 break;
 
             case "down":
-                if (getPos().getRow() + getSpeed() > Field.height - 1) {
-                    getPos().setRow(Field.height - 1);
+
+                if (pos.getRow() + getSpeed() > FIELD_HEIGHT - 1) {
+                    pos.setRow(Field.height - 1);
                 } else {
-                    getPos().setRow(getPos().getRow() + getSpeed());
+                    pos.setRow(pos.getRow() + getSpeed());
                 }
                 break;
 
             case "left":
-                if (getPos().getCol() - getSpeed() < 0) {
-                    getPos().setCol(0);
+                if (pos.getCol() - getSpeed() < 0) {
+                    pos.setCol(0);
                 } else {
-                    getPos().setCol(getPos().getCol() - getSpeed());
+                    pos.setCol(pos.getCol() - getSpeed());
                 }
                 break;
 
             case "right":
-                if (getPos().getCol() + getSpeed() > Field.width - 1) {
-                    getPos().setCol(Field.width - 1);
+                if (pos.getCol() + getSpeed() > FIELD_WIDTH - 1) {
+                    pos.setCol(Field.width - 1);
                 } else {
-                    getPos().setCol(getPos().getCol() + getSpeed());
+                    pos.setCol(pos.getCol() + getSpeed());
                 }
                 break;
         }
@@ -137,7 +143,6 @@ public class UDPClient implements Runnable {
     public void send(String UPCLientToString) {
 
         try {
-
             sendBuffer = UPCLientToString.getBytes();
             DatagramPacket sendJSON = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
             socket.send(sendJSON);
@@ -154,8 +159,7 @@ public class UDPClient implements Runnable {
                 "row:"+ pos.getRow() + "," +
                 "health:" + health + ","+
                 "dead:" + dead + "," +
-                "hasAttacked:" + hasAttacked + "," +
-                "playerNumber:" + playerNumber + "," + "}";
+                "hasAttacked:" + hasAttacked + "}";
     }
 
 
@@ -185,5 +189,9 @@ public class UDPClient implements Runnable {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

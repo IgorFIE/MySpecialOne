@@ -51,21 +51,26 @@ public class Field {
 
     }
 
-    public static void draw(HashMap<String, Player> players) {
+    public static void draw(HashMap<String, String[]> players, UDPLocalPlayer player) {
 
         screen.clear();
         for (String s : players.keySet()) {
-            int x = players.get(s).getPos().getCol();
-            int y = players.get(s).getPos().getRow();
 
-            if (players.get(s).hasAttacked()) {
-                for (int i =  x-1; i <= x + 1; i++) {
-                    for (int j = y-1; j <= y + 1; j++) {
+            int x = Integer.parseInt((players.get(s))[0]);
+            int y = Integer.parseInt((players.get(s))[1]);
+
+            if (players.get(s)[4].equals("true")) {
+                for (int i = x - 1; i <= x + 1; i++) {
+                    for (int j = y - 1; j <= y + 1; j++) {
                         screen.putString(i, j, " ", Terminal.Color.GREEN, Terminal.Color.RED, ScreenCharacterStyle.Bold);
                     }
                 }
             }
-            screen.putString(x, y, Integer.toString(players.get(s).getHealth()), Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
+            if (players.containsKey(player.getName())) {
+                screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.RED, ScreenCharacterStyle.Bold);
+            } else {
+                screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
+            }
         }
         screen.refresh();
     }

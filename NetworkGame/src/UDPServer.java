@@ -30,16 +30,8 @@ public class UDPServer {
     private ExecutorService pool = Executors.newFixedThreadPool(2);
 
     public UDPServer(String hostname, int portnumber) {
-
-        try {
             this.hostname = hostname;
             this.portnumber = portnumber;
-
-            socket = new DatagramSocket(portnumber);
-
-        } catch (SocketException e) {
-            System.out.println("No socket available! " + e.getMessage());
-        }
     }
 
     public void startServer(){
@@ -49,6 +41,7 @@ public class UDPServer {
             waitClientConnection();
 
             createPositions();
+            System.out.println("set positions");
 
             sendToAll();
 
@@ -60,15 +53,21 @@ public class UDPServer {
 
         while(clientList.size() < 2){
             try {
+                socket = new DatagramSocket(portnumber);
 
                 DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
                 socket.receive(receiveClient);
 
+                String message = new String(recvBuffer,0,receiveClient.getLength());
+
                 //TODO missing position in UDP client
                 UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),clientList.size()+1,this);
+                clientConnection.setName(message);
                 clientList.add(clientConnection);
                 IPlist.put(receiveClient.getAddress(),receiveClient.getPort());
                 pool.submit(clientConnection);
+
+
 
                 System.out.println("### " + receiveClient.getAddress() + ":" + receiveClient.getPort() + " has connected.");
 
@@ -97,22 +96,15 @@ public class UDPServer {
     }
 
     public void sendToAll() {
-/*
+
         String jsonArray = "";
 
         for (int i = 0; i < clientList.size();i++){
-            jsonArray += clientList.get(i).toString() + ",";
+            jsonArray += clientList.get(i).toString() + ";";
         }
-        sendBuffer = jsonArray.getBytes();
 
         for (UDPClient client:clientList) {
-            client.send(sendBuffer);
-        }
-*/
-        for (int i = 0; i < clientList.size();i++){
-            for (int j = 0; j < clientList.size();j++){
-                clientList.get(i).send(clientList.get(j).toString());
-            }
+            client.send(jsonArray);
         }
 
     }

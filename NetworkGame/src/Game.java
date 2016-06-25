@@ -63,7 +63,7 @@ public class Game {
     public void start(String playerNames) {
 
         createPlayers(playerNames);
-        Field.draw(players);
+        //Field.draw(players);
         String[] input;
         String player;
         String action;
@@ -105,7 +105,7 @@ public class Game {
                         break;
 
                 }
-                Field.draw(players);
+                //Field.draw(players);
             }
 
             System.out.println("you have died, you have been disconnected.");
