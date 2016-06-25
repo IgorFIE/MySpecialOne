@@ -11,7 +11,7 @@ public class UDPClient implements Runnable {
     private boolean dead = false;
     private boolean hasAttacked = false;
     private UDPServer server;
-    private int clientListSize;
+    private int playerNumber;
     private InetAddress address;
     private int port;
     private String playerCommand;
@@ -21,11 +21,10 @@ public class UDPClient implements Runnable {
 
     DatagramSocket socket = null;
 
-    public UDPClient(InetAddress address, int port, Position pos, int clientlistsize, UDPServer server) {
+    public UDPClient(InetAddress address, int port, int playerNumber, UDPServer server) {
         this.address = address;
         this.port = port;
-        this.pos = pos;
-        this.clientListSize = clientlistsize;
+        this.playerNumber = playerNumber;
         this.server = server;
 
     }
@@ -51,7 +50,25 @@ public class UDPClient implements Runnable {
             }
 
         }
+    }
 
+    public void gameLogic(String command) {
+
+        switch (command) {
+            case "up":
+            case "down":
+            case "left":
+            case "right":
+                move(command);
+                break;
+            case "attack":
+                System.out.println("attacking");
+                server.checkCollision(this);
+                break;
+            case "dead":
+                server.removeClient(this);
+                break;
+        }
     }
 
     public int attack() {
@@ -116,6 +133,34 @@ public class UDPClient implements Runnable {
         server.sendToAll();
     }
 
+    @Override
+    public void run() {
+
+    }
+
+    public void send(String UPCLientToString) {
+
+        try {
+
+            sendBuffer = UPCLientToString.getBytes();
+            DatagramPacket sendJSON = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
+            socket.send(sendJSON);
+
+        } catch (IOException e) {
+            System.out.println("Error" +e.getMessage());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "{"+name+","+pos.getCol()+","+pos.getRow()+","+health+","+strength+","+dead+","+hasAttacked+"}";
+    }
+
+
+    public void setPos(Position pos) {
+        this.pos = pos;
+    }
+
     public boolean isDead() {
         return dead;
     }
@@ -139,29 +184,5 @@ public class UDPClient implements Runnable {
 
     public String getName() {
         return name;
-    }
-
-    @Override
-    public void run() {
-
-    }
-
-    public void send(String UPCLientToString) {
-
-        try {
-
-            sendBuffer = UPCLientToString.getBytes();
-            DatagramPacket sendJSON = new DatagramPacket(sendBuffer, sendBuffer.length, address, port);
-            socket.send(sendJSON);
-
-        } catch (IOException e) {
-            System.out.println("Error" +e.getMessage());
-        }
-    }
-
-    
-    @Override
-    public String toString() {
-        return "{"+name+","+pos.getCol()+","+pos.getRow()+","+health+","+strength+","+dead+","+hasAttacked+"}";
     }
 }

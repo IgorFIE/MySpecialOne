@@ -19,7 +19,6 @@ public class UDPServer {
     DatagramSocket socket = null;
     private int portnumber;
     private String hostname;
-    private Position pos;
 
     private HashMap<InetAddress, Integer> IPlist = new HashMap<>();
     private List<UDPClient> clientList = Collections.synchronizedList(new LinkedList<>());
@@ -44,6 +43,8 @@ public class UDPServer {
 
             waitClientConnection();
 
+            createPositions();
+
             sendToAll();
 
             roomFull();
@@ -59,7 +60,7 @@ public class UDPServer {
                 socket.receive(receiveClient);
 
                 //TODO missing position in UDP client
-                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),pos,clientList.size()+1,this);
+                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),clientList.size()+1,this);
                 clientList.add(clientConnection);
                 IPlist.put(receiveClient.getAddress(),receiveClient.getPort());
                 pool.submit(clientConnection);
@@ -72,26 +73,7 @@ public class UDPServer {
         }
     }
 
-    public void gameLogic(UDPClient client,String command) {
-
-        switch (command) {
-            case "up":
-            case "down":
-            case "left":
-            case "right":
-                clientList.get(client).move(command);
-                break;
-            case "attack":
-                System.out.println("attacking");
-                checkCollision(clientList.get(client));
-                break;
-            case "dead":
-                clientList.remove(client);
-                break;
-        }
-    }
-
-    private void checkCollision(UDPClient player) {
+    public void checkCollision(UDPClient player) {
 
         for (int i = 0; i < clientList.size(); i++) {
             UDPClient p2 = clientList.get(i);
@@ -143,5 +125,14 @@ public class UDPServer {
     public void removeClient(UDPClient client) {
         clientList.remove(client);
         notify();
+    }
+
+    private void createPositions(){
+
+        Position pos = new Position(0,0);
+
+        for(int i = 0; i < clientList.size();i++){
+            clientList.get(i).setPos(pos);
+        }
     }
 }
