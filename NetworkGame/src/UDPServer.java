@@ -25,12 +25,12 @@ public class UDPServer {
     private int portnumber;
     private String hostname;
 
-    public final int FIELD_HEIGHT = 25;
-    public final int FIELD_WIDTH = 100;
+    public final int FIELD_HEIGHT = 24;
+    public final int FIELD_WIDTH = 99;
 
     private HashMap<InetAddress, Integer> IPlist = new HashMap<>();
     private List<UDPClient> clientList = Collections.synchronizedList(new LinkedList<>());
-    private ExecutorService pool = Executors.newFixedThreadPool(2);
+    private ExecutorService pool = Executors.newFixedThreadPool(3);
 
     public UDPServer(String hostname, int portnumber) {
             this.hostname = hostname;
@@ -60,7 +60,7 @@ public class UDPServer {
 
     private void waitClientConnection() {
 
-        while(clientList.size() < 3{
+        while(clientList.size() < 3){
             try {
                 DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
                 socket.receive(receiveClient);
@@ -138,30 +138,39 @@ public class UDPServer {
             case 2:
                 mySpecialGenerator(2,1,2);
                 break;
+            case 3:
             case 4:
                 mySpecialGenerator(2,2,1);
                 break;
+            case 5:
             case 6:
                 mySpecialGenerator(3,2,1);
                 break;
+            case 7:
             case 8:
                 mySpecialGenerator(4,2,1);
                 break;
+            case 9:
             case 10:
                 mySpecialGenerator(5,2,1);
                 break;
+            case 11:
             case 12:
                 mySpecialGenerator(4,3,1);
                 break;
+            case 13:
             case 14:
                 mySpecialGenerator(7,2,1);
                 break;
+            case 15:
             case 16:
                 mySpecialGenerator(4,4,1);
                 break;
+            case 17:
             case 18:
                 mySpecialGenerator(6,3,1);
                 break;
+            case 19:
             case 20:
                 mySpecialGenerator(5,4,1);
                 break;
@@ -176,18 +185,26 @@ public class UDPServer {
 
     private void mySpecialGenerator(int cols, int rows, int a){
 
+        clientList.get(0).setPos(new Position(4,4));
+        clientList.get(1).setPos(new Position(8,8));
+        clientList.get(2).setPos(new Position(16,16));
+
+        /*
         int count = 0;
 
         for(int i = 0 ; i < rows;i++){
-            int row = (2*i+1)/(clientList.size());
+            double row = (2.*i+1.)/(double) (clientList.size());
+            System.out.println("row:" + row);
             for (int j = 0; j < cols;j++){
-                int col = (2*j+1)/(a*clientList.size());
-                if(clientList.get(count) != null) {
-                    clientList.get(count).setPos(new Position(col * FIELD_WIDTH, row * FIELD_HEIGHT));
+                double col = (2.*j+1.)/(double) (a*clientList.size());
+                System.out.println("col:" + col);
+                if(count < clientList.size()) {
+                    System.out.println(row + ":" + col);
+                    clientList.get(count).setPos(new Position((int)Math.floor(col * FIELD_WIDTH), (int)Math.floor(row * FIELD_HEIGHT)));
                 }
                 count++;
             }
-        }
+        }*/
     }
 
 }

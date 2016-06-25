@@ -90,8 +90,8 @@ public class UDPClient implements Runnable {
 
             case "down":
 
-                if (pos.getRow() + getSpeed() > server.FIELD_HEIGHT - 1) {
-                    pos.setRow(server.FIELD_HEIGHT - 1);
+                if (pos.getRow() + getSpeed() > server.FIELD_HEIGHT) {
+                    pos.setRow(server.FIELD_HEIGHT);
                 } else {
                     pos.setRow(pos.getRow() + getSpeed());
                 }
@@ -106,8 +106,8 @@ public class UDPClient implements Runnable {
                 break;
 
             case "right":
-                if (pos.getCol() + getSpeed() > server.FIELD_WIDTH - 1) {
-                    pos.setCol(server.FIELD_WIDTH - 1);
+                if (pos.getCol() + getSpeed() > server.FIELD_WIDTH ) {
+                    pos.setCol(server.FIELD_WIDTH);
                 } else {
                     pos.setCol(pos.getCol() + getSpeed());
                 }
