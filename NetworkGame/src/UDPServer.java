@@ -32,6 +32,12 @@ public class UDPServer {
     public UDPServer(String hostname, int portnumber) {
             this.hostname = hostname;
             this.portnumber = portnumber;
+        try {
+            socket = new DatagramSocket(portnumber);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void startServer(){
@@ -53,7 +59,6 @@ public class UDPServer {
 
         while(clientList.size() < 2){
             try {
-                socket = new DatagramSocket(portnumber);
 
                 DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
                 socket.receive(receiveClient);
@@ -67,12 +72,10 @@ public class UDPServer {
                 IPlist.put(receiveClient.getAddress(),receiveClient.getPort());
                 pool.submit(clientConnection);
 
-
-
                 System.out.println("### " + receiveClient.getAddress() + ":" + receiveClient.getPort() + " has connected.");
 
             } catch (IOException e) {
-                System.out.println("ERROR Receiving! " + e.getMessage());
+                e.getMessage();
             }
         }
     }
@@ -126,10 +129,13 @@ public class UDPServer {
 
     private void createPositions(){
 
-        Position pos = new Position(0,0);
+        clientList.get(0).setPos(new Position(12,33));
+        clientList.get(1).setPos(new Position(12,82));
+
+        /*Position pos = new Position(50,12);
 
         for(int i = 0; i < clientList.size();i++){
             clientList.get(i).setPos(pos);
-        }
+        }*/
     }
 }

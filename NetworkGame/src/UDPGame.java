@@ -65,9 +65,11 @@ public class UDPGame {
                 } else{
                     array[j-1] = split3[j].split(":")[1];
                 }
-
             }
             players.put(name,array);
         }
+
+        System.out.println("hasmap size:"+players.size());
     }
+
 }

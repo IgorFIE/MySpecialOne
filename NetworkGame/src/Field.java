@@ -2,6 +2,7 @@ import com.googlecode.lanterna.TerminalFacade;
 import com.googlecode.lanterna.screen.ScreenCharacterStyle;
 import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.util.HashMap;
 
@@ -51,25 +52,34 @@ public class Field {
 
     }
 
-    public static void draw(HashMap<String, String[]> players, UDPLocalPlayer player) {
+    public static  void draw(HashMap<String, String[]> players, UDPLocalPlayer player) {
 
         screen.clear();
         for (String s : players.keySet()) {
 
+            System.out.println();
+
             int x = Integer.parseInt((players.get(s))[0]);
             int y = Integer.parseInt((players.get(s))[1]);
+
+            System.out.println(x + ":" + y);
 
             if (players.get(s)[4].equals("true")) {
                 for (int i = x - 1; i <= x + 1; i++) {
                     for (int j = y - 1; j <= y + 1; j++) {
                         screen.putString(i, j, " ", Terminal.Color.GREEN, Terminal.Color.RED, ScreenCharacterStyle.Bold);
+                        System.out.println("damage deal");
                     }
                 }
             }
-            if (players.containsKey(player.getName())) {
+            if (s.equals(player.getName())) {
                 screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.RED, ScreenCharacterStyle.Bold);
+                System.out.println("draw mine");
+
             } else {
                 screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
+                System.out.println("draw yours");
+
             }
         }
         screen.refresh();
