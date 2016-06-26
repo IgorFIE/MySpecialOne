@@ -51,8 +51,8 @@ public class UDPServer {
 
             waitClientConnection();
 
-            System.out.println("set positions and game mode:" + gameMode);
             gameMode();
+            System.out.println("set positions and game mode:" + gameMode);
 
             sendToAll();
 
@@ -154,15 +154,26 @@ public class UDPServer {
 
     public void removeClient(UDPClient client) {
         clientList.remove(client);
-        isFull = false;
-        notify();
+
+        clientList.get(0).setPos(new Position(33,12));
+        clientList.get(0).setCanMove(true);
+        clientList.get(1).setPos(new Position(82,12));
+        clientList.get(1).setCanMove(true);
+
+        //isFull = false;
+        //notify();
     }
 
     private void gameMode(){
-        gameMode = ((int)(Math.random()*1));
+        gameMode = ((int)(Math.random()*2));
 
         if(gameMode == 0){
-            mySpecialGenerator(2,1,2);
+            clientList.get(0).setPos(new Position(33,12));
+            clientList.get(1).setPos(new Position(82,12));
+            for(int i = 2; i < clientList.size();i++){
+                clientList.get(i).setPos(new Position(-1,-1));
+                clientList.get(i).setCanMove(false);
+            }
         } else {
             createPositions();
         }

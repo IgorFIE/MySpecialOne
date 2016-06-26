@@ -15,6 +15,7 @@ public class UDPClient implements Runnable {
     private InetAddress address;
     private int port;
     private String message;
+    private boolean canMove;
     byte[] sendBuffer;
     byte[] recvBuffer = new byte[1024];
 
@@ -28,6 +29,7 @@ public class UDPClient implements Runnable {
         this.socket = socket;
         this.health = 5;
         this.strength = 2;
+        this.canMove = true;
     }
 
     @Override
@@ -35,9 +37,12 @@ public class UDPClient implements Runnable {
 
         while(true) {
             while (!dead) {
-                playerAction(dialogue());
-                server.sendToAll();
+                while (canMove) {
+                    playerAction(dialogue());
+                    server.sendToAll();
+                }
             }
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -134,7 +139,6 @@ public class UDPClient implements Runnable {
             dead = true;
             if(server.getGameMode() == 0){
                 server.removeClient(this);
-                Thread.currentThread().interrupt();
             }
         }
     }
@@ -153,7 +157,7 @@ public class UDPClient implements Runnable {
 
     @Override
     public String toString() {
-        return "{name:"+ name+ "," +
+        return "{name:"+ playerNumber+ "," +
                 "col:"+ pos.getCol() + "," +
                 "row:"+ pos.getRow() + "," +
                 "health:" + health + ","+
@@ -192,5 +196,9 @@ public class UDPClient implements Runnable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setCanMove(boolean canMove) {
+        this.canMove = canMove;
     }
 }
