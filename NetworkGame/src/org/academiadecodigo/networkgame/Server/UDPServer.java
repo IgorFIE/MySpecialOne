@@ -14,11 +14,6 @@ import java.util.concurrent.Executors;
 
 public class UDPServer {
 
-    public static void main(String[] args) {
-        UDPServer server = new UDPServer(args[0], Integer.parseInt(args[1]));
-        server.startServer();
-    }
-
     byte[] sendBuffer = new byte[1024];
     byte[] recvBuffer = new byte[1024];
 
@@ -75,7 +70,7 @@ public class UDPServer {
                         String message = new String(recvBuffer, 0, receiveClient.getLength());
 
                         //TODO missing position in UDP client
-                        UDPClient clientConnection = new UDPClient(receiveClient.getAddress(), receiveClient.getPort(), clientList.size() + 1, new DatagramSocket(), getServer());
+                        UDPClient clientConnection = new UDPClient(receiveClient.getAddress(), receiveClient.getPort(), new DatagramSocket(), getServer());
                         clientConnection.setName(message);
                         clientList.add(clientConnection);
                         IPlist.put(receiveClient.getAddress(), receiveClient.getPort());

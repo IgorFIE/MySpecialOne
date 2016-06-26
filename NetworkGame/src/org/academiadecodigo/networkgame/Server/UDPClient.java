@@ -13,7 +13,6 @@ public class UDPClient implements Runnable {
     private boolean dead = false;
     private boolean hasAttacked = false;
     private UDPServer server;
-    private int playerNumber;
     private InetAddress address;
     private int port;
     private String message;
@@ -23,10 +22,9 @@ public class UDPClient implements Runnable {
 
     DatagramSocket socket = null;
 
-    public UDPClient(InetAddress address, int port, int playerNumber,DatagramSocket socket, UDPServer server) throws SocketException {
+    public UDPClient(InetAddress address, int port,DatagramSocket socket, UDPServer server) throws SocketException {
         this.address = address;
         this.port = port;
-        this.playerNumber = playerNumber;
         this.server = server;
         this.socket = socket;
         this.health = 5;
@@ -170,28 +168,12 @@ public class UDPClient implements Runnable {
         this.pos = pos;
     }
 
-    public boolean isDead() {
-        return dead;
-    }
-
     public int getSpeed() {
         return speed;
     }
 
     public Position getPos() {
         return pos;
-    }
-
-    public boolean hasAttacked() {
-        return hasAttacked;
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {

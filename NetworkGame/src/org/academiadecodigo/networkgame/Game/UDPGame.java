@@ -9,42 +9,38 @@ import java.util.HashMap;
  */
 public class UDPGame {
 
-    public static void main(String[] args) {
-        try {
-            UDPGame game = new UDPGame(args[0]);
-            game.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private DatagramSocket gameSocket;
     private UDPLocalPlayer player;
     private byte[] receiveData = new byte[1024];
     private HashMap<String,String[]> players = new HashMap<>();
 
-    public UDPGame(String host) throws IOException {
+    public UDPGame(String host) {
 
-        gameSocket = new DatagramSocket();
-        player = new UDPLocalPlayer(InetAddress.getByName(host),8080,gameSocket);
-        Thread thead = new Thread(player);
-        thead.start();
+        try {
+            gameSocket = new DatagramSocket();
 
-        DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-        gameSocket.receive(receivePacket);
+            player = new UDPLocalPlayer(InetAddress.getByName(host),8080,gameSocket);
+            Thread thead = new Thread(player);
+            thead.start();
 
-        player.setPort(receivePacket.getPort());
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            gameSocket.receive(receivePacket);
 
-        String message = new String(receiveData, 0, receivePacket.getLength());
+            player.setPort(receivePacket.getPort());
 
-        parseJSON(message);
+            String message = new String(receiveData, 0, receivePacket.getLength());
 
-        Field.init(100, 25);
+            parseJSON(message);
 
-        Field.draw(players,player);
+            Field.init(100, 25);
+
+            Field.draw(players,player);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private void start () {
+    public void start () {
 
         try {
 
