@@ -53,6 +53,13 @@ public class Field {
 
     }
 
+    /**
+     * Draws the field with player's properties updated
+     *
+     * @param players   HashMap with players
+     * @param player    UDPLocalPlayer
+     */
+
     public static  void draw(HashMap<String, String[]> players, UDPLocalPlayer player) {
 
         screen.clear();

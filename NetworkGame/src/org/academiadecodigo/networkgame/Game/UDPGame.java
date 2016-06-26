@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 /**
  * Created by codecadet on 24/06/16.
+ * Receives JSONs from server with players properties and tells the Field to draw them.
  */
 public class UDPGame {
 
@@ -14,14 +15,22 @@ public class UDPGame {
     private byte[] receiveData = new byte[1024];
     private HashMap<String,String[]> players = new HashMap<>();
 
+    /**
+     * UDPGame constructor, instantiates the LocalPlayer thread and waits for the first packet from server with player's properties.
+     * Draws game.
+     *
+     * @param host  Address to which Local Player will be sending packets (sever).
+     * @param portNumber    Port number on which server is listening
+     */
+
     public UDPGame(String host,int portNumber) {
 
         try {
             gameSocket = new DatagramSocket();
 
             player = new UDPLocalPlayer(InetAddress.getByName(host),portNumber,gameSocket);
-            Thread thead = new Thread(player);
-            thead.start();
+            Thread thread = new Thread(player);
+            thread.start();
 
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             gameSocket.receive(receivePacket);
@@ -40,6 +49,10 @@ public class UDPGame {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Game loop. Waits for packet from server and upon receiving one parses the JSON and updates the game.
+     */
 
     public void start () {
 
@@ -60,6 +73,12 @@ public class UDPGame {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Gets player's properties from JSON
+     *
+     * @param JSON  Data sent from the server with all player's properties necessary to update the game.
+     */
 
     private void parseJSON(String JSON) {
 
