@@ -137,6 +137,7 @@ public class UDPClient implements Runnable {
         if (health <= 0) {
             health = 0;
             dead = true;
+            canMove = false;
             if(server.getGameMode() == 0){
                 server.removeClient(this);
             }
