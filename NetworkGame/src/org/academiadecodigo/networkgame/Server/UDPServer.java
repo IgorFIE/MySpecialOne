@@ -48,7 +48,7 @@ public class UDPServer {
             waitClientConnection();
 
             gameMode();
-            System.out.println("set positions and game mode:" + gameMode);
+            System.out.println("set positions and game mode: " + gameMode);
 
             sendToAll();
 
