@@ -157,7 +157,7 @@ public class UDPClient implements Runnable {
 
     @Override
     public String toString() {
-        return "{name:"+ playerNumber+ "," +
+        return "{name:"+ address+ "," +
                 "col:"+ pos.getCol() + "," +
                 "row:"+ pos.getRow() + "," +
                 "health:" + health + ","+

@@ -12,6 +12,7 @@ import java.net.SocketException;
 public class UDPLocalPlayer implements Runnable{
 
     private String name;
+    private String IP;
     BufferedReader input;
     InetAddress hostAddress;
     int port;
@@ -55,8 +56,9 @@ public class UDPLocalPlayer implements Runnable{
 
         }
 
-
     }
+
+
 
     public String getName() {
         return name;

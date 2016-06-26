@@ -4,6 +4,8 @@ import com.googlecode.lanterna.screen.ScreenWriter;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 
@@ -67,12 +69,16 @@ public class Field {
                     }
                 }
             }
-            if (s.equals(player.getName())) {
-                screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.RED, ScreenCharacterStyle.Bold);
+            try {
+                if (s.equals(InetAddress.getLocalHost().toString())) {
+                    screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.RED, ScreenCharacterStyle.Bold);
 
-            } else {
-                screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
+                } else {
+                    screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.YELLOW, ScreenCharacterStyle.Bold);
 
+                }
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
         }
         screen.refresh();
