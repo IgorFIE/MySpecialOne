@@ -9,7 +9,7 @@ public class UDPGame {
 
     public static void main(String[] args) {
         try {
-            UDPGame game = new UDPGame("localhost");
+            UDPGame game = new UDPGame("192.168.1.27");
             game.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,6 +74,7 @@ public class UDPGame {
             for(int j = 0; j < split3.length; j++) {
                 if(j == 0){
                     name = split3[0].split(":")[1];
+                    name = name.substring(1);
                 } else{
                     array[j-1] = split3[j].split(":")[1];
                 }
