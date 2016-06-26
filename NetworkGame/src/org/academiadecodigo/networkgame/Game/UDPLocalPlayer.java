@@ -16,6 +16,8 @@ public class UDPLocalPlayer implements Runnable{
     private InetAddress hostAddress;
     private int port;
     private DatagramSocket socket;
+    private static String instructions= "--------------\nINSTRUCTIONS:\n--------------\n\nType the following and perform accordingly:\n - left\n - right\n - up\n - down\n - attack\n\nSurvive!!!";
+
 
     /**
      *
@@ -41,7 +43,7 @@ public class UDPLocalPlayer implements Runnable{
         try {
             System.out.println("Enter your name!!!");
             name = input.readLine();
-            System.out.println(name);
+            System.out.println("Hello and welcome "+name+"\n"+instructions);
             byte[] bytesToSend = name.getBytes();
             DatagramPacket packet = new DatagramPacket(bytesToSend, bytesToSend.length, hostAddress, port);
             socket.send(packet);
