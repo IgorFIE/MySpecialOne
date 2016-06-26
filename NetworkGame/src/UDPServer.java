@@ -165,8 +165,8 @@ public class UDPServer {
     }
 
     private void gameMode(){
-        //gameMode = ((int)(Math.random()*2));
-        gameMode = 0;
+        gameMode = ((int)(Math.random()*2));
+
         if(gameMode == 0){
             clientList.get(0).setPos(new Position(33,12));
             clientList.get(1).setPos(new Position(82,12));
