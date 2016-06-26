@@ -29,7 +29,6 @@ public class UDPClient implements Runnable {
         this.socket = socket;
         this.health = 5;
         this.strength = 2;
-        this.canMove = true;
     }
 
     @Override
@@ -38,6 +37,7 @@ public class UDPClient implements Runnable {
         while(true) {
             while (!dead) {
                 while (canMove) {
+                    System.out.println(address);
                     playerAction(dialogue());
                     server.sendToAll();
                 }
@@ -53,11 +53,7 @@ public class UDPClient implements Runnable {
             try {
                 socket.receive(receiveMessage);
 
-                System.out.println(receiveMessage.getAddress());
-
                 message = new String(recvBuffer, 0, receiveMessage.getLength());
-
-                System.out.println(message);
 
             } catch (IOException e) {
                 System.out.println("ERROR Receiving! " + e.getMessage());

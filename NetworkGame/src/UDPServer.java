@@ -165,14 +165,16 @@ public class UDPServer {
     }
 
     private void gameMode(){
-        gameMode = ((int)(Math.random()*2));
-
+        //gameMode = ((int)(Math.random()*2));
+        gameMode = 0;
         if(gameMode == 0){
             clientList.get(0).setPos(new Position(33,12));
+            clientList.get(0).setCanMove(true);
             clientList.get(1).setPos(new Position(82,12));
+            clientList.get(1).setCanMove(true);
+
             for(int i = 2; i < clientList.size();i++){
                 clientList.get(i).setPos(new Position(-1,-1));
-                clientList.get(i).setCanMove(false);
             }
         } else {
             createPositions();
@@ -238,6 +240,7 @@ public class UDPServer {
                 if(count < clientList.size()) {
                     System.out.println(row + ":" + col);
                     clientList.get(count).setPos(new Position((int)Math.floor(col * FIELD_WIDTH), (int)Math.floor(row * FIELD_HEIGHT)));
+                    clientList.get(count).setCanMove(true);
                 }
                 count++;
             }
