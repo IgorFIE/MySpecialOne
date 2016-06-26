@@ -89,7 +89,7 @@ public class UDPClient implements Runnable {
      */
     private void playerAction(String command) {
 
-        switch (command) {
+        switch (command.toLowerCase()) {
             case "up":
             case "down":
             case "left":
