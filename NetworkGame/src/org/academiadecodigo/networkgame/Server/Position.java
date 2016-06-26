@@ -1,3 +1,5 @@
+package org.academiadecodigo.networkgame.Server;
+
 /**
  * Created by codecadet on 20/06/16.
  */

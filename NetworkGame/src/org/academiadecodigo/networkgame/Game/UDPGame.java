@@ -1,3 +1,5 @@
+package org.academiadecodigo.networkgame.Game;
+
 import java.io.IOException;
 import java.net.*;
 import java.util.HashMap;
@@ -9,7 +11,7 @@ public class UDPGame {
 
     public static void main(String[] args) {
         try {
-            UDPGame game = new UDPGame("192.168.1.27");
+            UDPGame game = new UDPGame(args[0]);
             game.start();
         } catch (IOException e) {
             e.printStackTrace();

@@ -1,3 +1,4 @@
+package org.academiadecodigo.networkgame.Server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,7 +15,7 @@ import java.util.concurrent.Executors;
 public class UDPServer {
 
     public static void main(String[] args) {
-        UDPServer server = new UDPServer("192.168.1.27", 8080);
+        UDPServer server = new UDPServer(args[0], Integer.parseInt(args[1]));
         server.startServer();
     }
 
@@ -93,7 +94,7 @@ public class UDPServer {
         long time = System.currentTimeMillis() / 1000;
         long relativeTime = 0;
 
-        while(((relativeTime - time)%100) < 25 && clientList.size() < 21){
+        while(((relativeTime - time)%100) < 50 && clientList.size() < 21){
 
             relativeTime = System.currentTimeMillis() / 1000;
 

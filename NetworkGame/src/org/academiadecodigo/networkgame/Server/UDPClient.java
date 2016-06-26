@@ -1,3 +1,5 @@
+package org.academiadecodigo.networkgame.Server;
+
 import java.io.IOException;
 import java.net.*;
 
