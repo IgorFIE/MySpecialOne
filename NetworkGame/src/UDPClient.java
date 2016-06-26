@@ -26,6 +26,8 @@ public class UDPClient implements Runnable {
         this.playerNumber = playerNumber;
         this.server = server;
         this.socket = socket;
+        this.health = 5;
+        this.strength = 2;
     }
 
     @Override
