@@ -14,7 +14,7 @@ public class Main {
         }
 
         if(args[0].equals("game")){
-            UDPGame game = new UDPGame(args[1]);
+            UDPGame game = new UDPGame(args[1], Integer.parseInt(args[2]));
             game.start();
         }
     }

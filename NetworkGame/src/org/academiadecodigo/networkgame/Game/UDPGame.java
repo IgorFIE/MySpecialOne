@@ -14,12 +14,12 @@ public class UDPGame {
     private byte[] receiveData = new byte[1024];
     private HashMap<String,String[]> players = new HashMap<>();
 
-    public UDPGame(String host) {
+    public UDPGame(String host,int portNumber) {
 
         try {
             gameSocket = new DatagramSocket();
 
-            player = new UDPLocalPlayer(InetAddress.getByName(host),8080,gameSocket);
+            player = new UDPLocalPlayer(InetAddress.getByName(host),portNumber,gameSocket);
             Thread thead = new Thread(player);
             thead.start();
 
@@ -35,6 +35,7 @@ public class UDPGame {
             Field.init(100, 25);
 
             Field.draw(players,player);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
