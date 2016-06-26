@@ -24,13 +24,14 @@ public class UDPServer {
     DatagramSocket socket = null;
     private int portnumber;
     private String hostname;
+    private boolean isFull;
 
     public final int FIELD_HEIGHT = 24;
     public final int FIELD_WIDTH = 99;
 
     private HashMap<InetAddress, Integer> IPlist = new HashMap<>();
     private List<UDPClient> clientList = Collections.synchronizedList(new LinkedList<>());
-    private ExecutorService pool = Executors.newFixedThreadPool(3);
+    private ExecutorService pool = Executors.newFixedThreadPool(20);
 
     public UDPServer(String hostname, int portnumber) {
             this.hostname = hostname;
@@ -60,7 +61,10 @@ public class UDPServer {
 
     private void waitClientConnection() {
 
-        while(clientList.size() < 3){
+        long time = System.currentTimeMillis() * 1000;
+        long relativeTime = 0;
+
+        while((time - relativeTime) < 200 && clientList.size() < 21){
             try {
                 DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
                 socket.receive(receiveClient);
@@ -76,10 +80,14 @@ public class UDPServer {
 
                 System.out.println("### " + receiveClient.getAddress() + ":" + receiveClient.getPort() + " has connected.");
 
+                relativeTime = System.currentTimeMillis() * 1000;
+
             } catch (IOException e) {
                 e.getMessage();
             }
         }
+
+        isFull = true;
     }
 
     public void checkCollision(UDPClient player) {
@@ -115,7 +123,7 @@ public class UDPServer {
     }
 
     private synchronized void roomFull() {
-        while (clientList.size() == 3) {
+        while (isFull) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -126,13 +134,11 @@ public class UDPServer {
 
     public void removeClient(UDPClient client) {
         clientList.remove(client);
+        isFull = false;
         notify();
     }
 
     private void createPositions(){
-
-        //clientList.get(0).setPos(new Position(33,12));
-        //clientList.get(1).setPos(new Position(82,12));
 
         switch (clientList.size()){
             case 2:
@@ -175,21 +181,10 @@ public class UDPServer {
                 mySpecialGenerator(5,4,1);
                 break;
         }
-
-        /*Position pos = new Position(50,12);
-
-        for(int i = 0; i < clientList.size();i++){
-            clientList.get(i).setPos(pos);
-        }*/
     }
 
     private void mySpecialGenerator(int cols, int rows, int a){
 
-        clientList.get(0).setPos(new Position(4,4));
-        clientList.get(1).setPos(new Position(8,8));
-        clientList.get(2).setPos(new Position(16,16));
-
-        /*
         int count = 0;
 
         for(int i = 0 ; i < rows;i++){
@@ -204,7 +199,7 @@ public class UDPServer {
                 }
                 count++;
             }
-        }*/
+        }
     }
 
 }
