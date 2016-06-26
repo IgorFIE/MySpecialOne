@@ -29,6 +29,7 @@ public class UDPClient implements Runnable {
         this.socket = socket;
         this.health = 5;
         this.strength = 2;
+        this.canMove = true;
     }
 
     @Override
@@ -36,8 +37,8 @@ public class UDPClient implements Runnable {
 
         while(true) {
             while (!dead) {
+                System.out.println(address);
                 while (canMove) {
-                    System.out.println(address);
                     playerAction(dialogue());
                     server.sendToAll();
                 }
