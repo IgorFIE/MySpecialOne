@@ -10,12 +10,21 @@ public class Position {
     private int width;
     private int height;
 
-    public Position(int col, int row){
+    /**
+     * set a number of colums and rows
+     * and the width and height for collision area
+     *
+     * @param col number of columns
+     * @param row number of rows
+     */
+    public Position(int col, int row) {
         this.col = col;
         this.row = row;
         width = 3;
         height = 3;
     }
+
+    //GETTERS AND SETTERS
 
     public int getWidth() {
         return width;
@@ -25,20 +34,12 @@ public class Position {
         return height;
     }
 
-    public int getOutCol(){
+    public int getOutCol() {
         return col - 1;
     }
 
     public int getOutRow() {
         return row - 1;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
     }
 
     public int getCol() {
@@ -47,5 +48,13 @@ public class Position {
 
     public int getRow() {
         return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
     }
 }

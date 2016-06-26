@@ -9,7 +9,7 @@ import org.academiadecodigo.networkgame.Server.UDPServer;
 public class Main {
     public static void main(String[] args) {
         if(args[0].equals("server")){
-            UDPServer server = new UDPServer(args[1], Integer.parseInt(args[2]));
+            UDPServer server = new UDPServer(Integer.parseInt(args[1]));
             server.startServer();
         }
 

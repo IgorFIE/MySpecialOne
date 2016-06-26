@@ -14,12 +14,9 @@ import java.util.concurrent.Executors;
 
 public class UDPServer {
 
-    byte[] sendBuffer = new byte[1024];
     byte[] recvBuffer = new byte[1024];
-
     DatagramSocket socket = null;
-    private int portnumber;
-    private String hostname;
+
     private boolean isFull;
     private int gameMode;
 
@@ -30,17 +27,26 @@ public class UDPServer {
     private List<UDPClient> clientList = Collections.synchronizedList(new LinkedList<>());
     private ExecutorService pool = Executors.newFixedThreadPool(20);
 
-    public UDPServer(String hostname, int portnumber) {
-            this.hostname = hostname;
-            this.portnumber = portnumber;
+    /**
+     * Constructor receives a port
+     *
+     * @param portNumber of the DatagramSocket to wait for connections
+     */
+    public UDPServer(int portNumber) {
         try {
-            socket = new DatagramSocket(portnumber);
+            socket = new DatagramSocket(portNumber);
         } catch (SocketException e) {
             e.printStackTrace();
         }
-
     }
 
+    /**
+     * Start the Server loop
+     * wait for 50 seconds for players
+     * then choose the game mode to play
+     * then send all JSONS to all players
+     * then wait while the room is full
+     */
     public void startServer(){
 
         while (true) {
@@ -56,8 +62,14 @@ public class UDPServer {
         }
     }
 
+    /**
+     * This method creates a Thread to wait for client connections
+     * and while the number of players is lower then 20 and the time is lower then 50 seconds
+     * it will wait for clients
+     *
+     * then the Thread is interrupted and the boolean isFull is set to true
+     */
     private synchronized void waitClientConnection(){
-
 
         Thread waitClientConnection = new Thread(new Runnable() {
 
@@ -69,9 +81,9 @@ public class UDPServer {
                         socket.receive(receiveClient);
                         String message = new String(recvBuffer, 0, receiveClient.getLength());
 
-                        //TODO missing position in UDP client
                         UDPClient clientConnection = new UDPClient(receiveClient.getAddress(), receiveClient.getPort(), new DatagramSocket(), getServer());
                         clientConnection.setName(message);
+
                         clientList.add(clientConnection);
                         IPlist.put(receiveClient.getAddress(), receiveClient.getPort());
                         pool.submit(clientConnection);
@@ -93,73 +105,24 @@ public class UDPServer {
 
             relativeTime = System.currentTimeMillis() / 1000;
 
-            System.out.println("Time: " + (relativeTime-time)%60);
+            System.out.println("Time: " + (relativeTime-time)%100);
             try {
                 wait(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
 
         waitClientConnection.interrupt();
         isFull = true;
     }
 
-    public void checkCollision(UDPClient player) {
-
-        for (int i = 0; i < clientList.size(); i++) {
-            UDPClient p2 = clientList.get(i);
-            if (p2 == player) {
-                continue;
-
-            } else if (checkCrash(player.getPos(), p2.getPos())) {
-                p2.loseHealth(player.attack());
-            }
-        }
-    }
-
-    private boolean checkCrash(Position pos1, Position pos2) {
-        return Math.abs(pos1.getOutCol() - pos2.getOutCol()) <= pos1.getWidth() / 2 + pos2.getWidth() / 2 &&
-                Math.abs(pos1.getOutRow() - pos2.getOutRow()) <= pos1.getHeight() / 2 + pos2.getHeight() / 2;
-    }
-
-    public void sendToAll() {
-
-        String jsonArray = "";
-
-        for (int i = 0; i < clientList.size();i++){
-            jsonArray += clientList.get(i).toString() + ";";
-        }
-
-        for (UDPClient client:clientList) {
-            client.send(jsonArray);
-        }
-
-    }
-
-    private synchronized void roomFull() {
-        while (isFull) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public synchronized void removeClient(UDPClient client) {
-        clientList.remove(client);
-
-        clientList.get(0).setPos(new Position(33,12));
-        clientList.get(0).setCanMove(true);
-        clientList.get(1).setPos(new Position(82,12));
-        clientList.get(1).setCanMove(true);
-
-        //isFull = false;
-        //notify();
-    }
-
+    /**
+     * defines the game mode
+     *
+     * 0 = 1 vs 1 arena
+     * 1 = last man standing
+     */
     private void gameMode(){
         gameMode = ((int)(Math.random()*2));
 
@@ -176,6 +139,10 @@ public class UDPServer {
         }
     }
 
+    /**
+     * checks the clientList size then for that number
+     * it will generates differents positions
+     */
     private void createPositions(){
 
         switch (clientList.size()){
@@ -222,6 +189,14 @@ public class UDPServer {
         }
     }
 
+    /**
+     * Generates the positions to all players
+     * by the values received
+     *
+     * @param cols to insert players
+     * @param rows to insert players
+     * @param a coefficient
+     */
     private void mySpecialGenerator(int cols, int rows, int a){
 
         int count = 0;
@@ -240,6 +215,94 @@ public class UDPServer {
             }
         }
     }
+
+    /**
+     * while the room is full it will wait
+     */
+    private synchronized void roomFull() {
+        while (isFull) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * it will remove a player then set others 2 players
+     * int the field
+     *
+     * this only affects in gameMode 0
+     *
+     * @param client to remove from the list
+     */
+    public synchronized void removeClient(UDPClient client) {
+
+        clientList.remove(client);
+
+        clientList.get(0).setPos(new Position(33,12));
+        clientList.get(0).setCanMove(true);
+        clientList.get(1).setPos(new Position(82,12));
+        clientList.get(1).setCanMove(true);
+
+        if(clientList.size() == 1) {
+            clientList.remove(0);
+            isFull = false;
+            notify();
+        }
+    }
+
+
+    /**
+     * Send to all will collect all the JSONS from all clients
+     * Then send to all clients
+     */
+    public void sendToAll() {
+
+        String jsonArray = "";
+
+        for (int i = 0; i < clientList.size();i++){
+            jsonArray += clientList.get(i).toString() + ";";
+        }
+
+        for (UDPClient client:clientList) {
+            client.send(jsonArray);
+        }
+    }
+
+    /**
+     * This receives a client then it will compare its position
+     * with all the others clients property's
+     *
+     * @param player to compare
+     */
+    public void checkCollision(UDPClient player) {
+
+        for (int i = 0; i < clientList.size(); i++) {
+            UDPClient p2 = clientList.get(i);
+            if (p2 == player) {
+                continue;
+
+            } else if (checkCrash(player.getPos(), p2.getPos())) {
+                p2.loseHealth(player.attack());
+            }
+        }
+    }
+
+    /**
+     * check if the players are in the same area
+     *
+     * @param pos1 Position from one player
+     * @param pos2 Position from one player
+     * @return a boolean
+     */
+    private boolean checkCrash(Position pos1, Position pos2) {
+        return Math.abs(pos1.getOutCol() - pos2.getOutCol()) <= pos1.getWidth() / 2 + pos2.getWidth() / 2 &&
+                Math.abs(pos1.getOutRow() - pos2.getOutRow()) <= pos1.getHeight() / 2 + pos2.getHeight() / 2;
+    }
+
+    //GETTERS
 
     public UDPServer getServer() {
         return this;
