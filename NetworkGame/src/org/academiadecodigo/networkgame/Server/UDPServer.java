@@ -101,7 +101,7 @@ public class UDPServer {
         long time = System.currentTimeMillis() / 1000;
         long relativeTime = 0;
 
-        while(((relativeTime - time)%100) < 50 && clientList.size() < 21){
+        while(((relativeTime - time)%100) < 30 && clientList.size() < 21){
 
             relativeTime = System.currentTimeMillis() / 1000;
 
