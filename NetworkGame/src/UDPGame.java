@@ -9,7 +9,7 @@ public class UDPGame {
 
     public static void main(String[] args) {
         try {
-            UDPGame game = new UDPGame();
+            UDPGame game = new UDPGame("localhost");
             game.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -21,10 +21,10 @@ public class UDPGame {
     private byte[] receiveData = new byte[1024];
     private HashMap<String,String[]> players = new HashMap<>();
 
-    public UDPGame() throws IOException {
+    public UDPGame(String host) throws IOException {
 
         gameSocket = new DatagramSocket();
-        player = new UDPLocalPlayer(InetAddress.getByName("localhost"),8080,gameSocket);
+        player = new UDPLocalPlayer(InetAddress.getByName(host),8080,gameSocket);
         Thread thead = new Thread(player);
         thead.start();
 

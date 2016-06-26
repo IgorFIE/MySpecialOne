@@ -34,21 +34,23 @@ public class UDPClient implements Runnable {
     public void run() {
 
         while(true) {
-            playerAction(dialogue());
-            server.sendToAll();
+            while (!dead) {
+                playerAction(dialogue());
+                server.sendToAll();
+            }
         }
     }
 
     public String dialogue() {
 
             //TODO - Don't know what the fuck i'm doing lol! NVM Check this sh!t
-            DatagramPacket receiveJSON = new DatagramPacket(recvBuffer, recvBuffer.length);
+            DatagramPacket receiveMessage = new DatagramPacket(recvBuffer, recvBuffer.length);
             try {
-                socket.receive(receiveJSON);
+                socket.receive(receiveMessage);
 
-                System.out.println(receiveJSON.getAddress());
+                System.out.println(receiveMessage.getAddress());
 
-                message = new String(recvBuffer, 0, receiveJSON.getLength());
+                message = new String(recvBuffer, 0, receiveMessage.getLength());
 
                 System.out.println(message);
 
@@ -60,20 +62,17 @@ public class UDPClient implements Runnable {
 
     public void playerAction(String command) {
 
-        switch (command) {
-            case "up":
-            case "down":
-            case "left":
-            case "right":
-                move(command);
-                break;
-            case "attack":
-                server.checkCollision(this);
-                break;
-            case "dead":
-                server.removeClient(this);
-                break;
-        }
+            switch (command) {
+                case "up":
+                case "down":
+                case "left":
+                case "right":
+                    move(command);
+                    break;
+                case "attack":
+                    server.checkCollision(this);
+                    break;
+            }
     }
 
     public void move(String direction) {
@@ -133,6 +132,10 @@ public class UDPClient implements Runnable {
         if (health <= 0) {
             health = 0;
             dead = true;
+            if(server.getGameMode() == 0){
+                server.removeClient(this);
+                Thread.currentThread().interrupt();
+            }
         }
     }
 

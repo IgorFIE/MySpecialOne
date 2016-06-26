@@ -25,6 +25,7 @@ public class UDPServer {
     private int portnumber;
     private String hostname;
     private boolean isFull;
+    private int gameMode;
 
     public final int FIELD_HEIGHT = 24;
     public final int FIELD_WIDTH = 99;
@@ -50,8 +51,8 @@ public class UDPServer {
 
             waitClientConnection();
 
-            createPositions();
-            System.out.println("set positions");
+            System.out.println("set positions and game mode:" + gameMode);
+            gameMode();
 
             sendToAll();
 
@@ -157,6 +158,16 @@ public class UDPServer {
         notify();
     }
 
+    private void gameMode(){
+        gameMode = ((int)(Math.random()*1));
+
+        if(gameMode == 0){
+            mySpecialGenerator(2,1,2);
+        } else {
+            createPositions();
+        }
+    }
+
     private void createPositions(){
 
         switch (clientList.size()){
@@ -224,5 +235,9 @@ public class UDPServer {
 
     public UDPServer getServer() {
         return this;
+    }
+
+    public int getGameMode() {
+        return gameMode;
     }
 }
