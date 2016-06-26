@@ -59,34 +59,53 @@ public class UDPServer {
         }
     }
 
-    private void waitClientConnection() {
+    private synchronized void waitClientConnection(){
 
-        long time = System.currentTimeMillis() * 1000;
+
+        Thread waitClientConnection = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
+                        socket.receive(receiveClient);
+                        String message = new String(recvBuffer, 0, receiveClient.getLength());
+
+                        //TODO missing position in UDP client
+                        UDPClient clientConnection = new UDPClient(receiveClient.getAddress(), receiveClient.getPort(), clientList.size() + 1, new DatagramSocket(), getServer());
+                        clientConnection.setName(message);
+                        clientList.add(clientConnection);
+                        IPlist.put(receiveClient.getAddress(), receiveClient.getPort());
+                        pool.submit(clientConnection);
+
+                        System.out.println("### " + receiveClient.getAddress() + ":" + receiveClient.getPort() + " has connected.");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        waitClientConnection.start();
+
+        long time = System.currentTimeMillis() / 1000;
         long relativeTime = 0;
 
-        while((time - relativeTime) < 200 && clientList.size() < 21){
+        while(((relativeTime - time)%100) < 25 && clientList.size() < 21){
+
+            relativeTime = System.currentTimeMillis() / 1000;
+
+            System.out.println("Time: " + (relativeTime-time)%60);
             try {
-                DatagramPacket receiveClient = new DatagramPacket(recvBuffer, recvBuffer.length);
-                socket.receive(receiveClient);
-
-                String message = new String(recvBuffer,0,receiveClient.getLength());
-
-                //TODO missing position in UDP client
-                UDPClient clientConnection = new UDPClient(receiveClient.getAddress(),receiveClient.getPort(),clientList.size()+1,new DatagramSocket(),this);
-                clientConnection.setName(message);
-                clientList.add(clientConnection);
-                IPlist.put(receiveClient.getAddress(),receiveClient.getPort());
-                pool.submit(clientConnection);
-
-                System.out.println("### " + receiveClient.getAddress() + ":" + receiveClient.getPort() + " has connected.");
-
-                relativeTime = System.currentTimeMillis() * 1000;
-
-            } catch (IOException e) {
-                e.getMessage();
+                wait(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
         }
 
+        waitClientConnection.interrupt();
         isFull = true;
     }
 
@@ -141,6 +160,7 @@ public class UDPServer {
     private void createPositions(){
 
         switch (clientList.size()){
+            case 1:
             case 2:
                 mySpecialGenerator(2,1,2);
                 break;
@@ -202,4 +222,7 @@ public class UDPServer {
         }
     }
 
+    public UDPServer getServer() {
+        return this;
+    }
 }
