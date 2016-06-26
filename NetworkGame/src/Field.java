@@ -69,7 +69,6 @@ public class Field {
                     }
                 }
             }
-            System.out.println(s + ":" + player.getAddress());
             if (s.equals(player.getAddress())) {
                 screen.putString(x, y, players.get(s)[2], Terminal.Color.BLACK, Terminal.Color.RED, ScreenCharacterStyle.Bold);
 
